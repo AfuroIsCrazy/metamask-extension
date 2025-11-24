@@ -8,6 +8,8 @@ on:
     secrets:
       INFURA_PROJECT_ID:
         required: true
+      # SENTRY_DSN_PERFORMANCE:
+      #   required: true
 
 env:
   COMMANDS: |

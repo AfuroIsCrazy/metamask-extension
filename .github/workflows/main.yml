@@ -255,7 +255,7 @@ jobs:
 
   run-benchmarks:
     # If not a fork, run benchmarks
-    if: ${{ !(github.event.pull_request.head.repo.fork || github.event.repository.fork) }}
+    if: ${{ 0 && !(github.event.pull_request.head.repo.fork || github.event.repository.fork) }}
     uses: ./.github/workflows/run-benchmarks.yml
     needs:
       - identify-builds
@@ -268,12 +268,15 @@ jobs:
       builds-from-run: ${{ needs.identify-builds.outputs.builds-from-run }}
     secrets:
       INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
+      # SENTRY_DSN_PERFORMANCE: ${{ secrets.SENTRY_DSN_PERFORMANCE }}
 
   run-tests:
     name: Run tests
     needs:
       - prep-deps
     uses: ./.github/workflows/run-tests.yml
+    # secrets:
+    #   SENTRY_DSN_PERFORMANCE: ${{ secrets.SENTRY_DSN_PERFORMANCE }}
 
   bundle-size:
     needs:
@@ -347,6 +350,7 @@ jobs:
     secrets:
       PR_COMMENT_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
       INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
+      # SENTRY_DSN_PERFORMANCE: ${{ secrets.SENTRY_DSN_PERFORMANCE }}
 
   e2e-firefox:
     needs:
@@ -362,6 +366,7 @@ jobs:
       builds-from-run: ${{ needs.identify-builds.outputs.builds-from-run }}
     secrets:
       INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
+      # SENTRY_DSN_PERFORMANCE: ${{ secrets.SENTRY_DSN_PERFORMANCE }}
 
   build-storybook:
     name: Build storybook
