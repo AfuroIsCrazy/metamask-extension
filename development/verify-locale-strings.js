@@ -70,9 +70,10 @@ function containsSpecialCase(text, exceptions) {
 
 // Helper function to detect title case violations
 function hasTitleCaseViolation(text) {
-  // Remove quoted text (single quotes) before checking
+  // Remove quoted text (single quotes and escaped double quotes) before checking
   // Quoted text refers to UI elements and should preserve capitalization
-  const textWithoutQuotes = text.replace(/'[^']*'/g, '');
+  let textWithoutQuotes = text.replace(/'[^']*'/g, ''); // Remove 'text'
+  textWithoutQuotes = textWithoutQuotes.replace(/\\"[^"]*\\"/g, ''); // Remove \"text\"
 
   // Ignore single words
   const words = textWithoutQuotes.split(/\s+/);
@@ -147,14 +148,20 @@ function toSentenceCase(text, exceptions) {
 function convertToSentenceCase(text) {
   if (!text) return text;
 
-  // Extract quoted text (single quotes) and preserve them
+  // Extract quoted text (single quotes and escaped double quotes) and preserve them
   const quotedTexts = [];
   const placeholder = '___QUOTED___';
   let textToProcess = text;
 
-  // Find all quoted text and replace with placeholders
-  textToProcess = textToProcess.replace(/'([^']*)'/g, (match, quotedContent) => {
+  // Find all single-quoted text and replace with placeholders
+  textToProcess = textToProcess.replace(/'([^']*)'/g, (match) => {
     quotedTexts.push(match); // Store the full match including quotes
+    return placeholder;
+  });
+
+  // Find all escaped double-quoted text and replace with placeholders
+  textToProcess = textToProcess.replace(/\\"([^"]*)\\"/g, (match) => {
+    quotedTexts.push(match); // Store the full match including escaped quotes
     return placeholder;
   });
 
