@@ -29,6 +29,7 @@ const log = require('loglevel');
 const glob = require('fast-glob');
 const matchAll = require('string.prototype.matchall').getPolyfill();
 const localeIndex = require('../app/_locales/index.json');
+const sentenceCaseExceptions = require('../app/_locales/sentence-case-exceptions.json');
 const {
   compareLocalesForMissingDescriptions,
   compareLocalesForMissingItems,
@@ -40,7 +41,6 @@ const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
 // Load sentence case exceptions
-const sentenceCaseExceptions = require('../app/_locales/sentence-case-exceptions.json');
 
 // Build and compile a single regex from all exceptions for performance
 function buildExceptionsRegex(exceptions) {
@@ -50,17 +50,17 @@ function buildExceptionsRegex(exceptions) {
   const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
   // Add exact matches (escaped to treat as literals)
-  exceptions.exactMatches.forEach(term => {
+  exceptions.exactMatches.forEach((term) => {
     patterns.push(escapeRegex(term));
   });
 
   // Add acronyms (escaped to treat as literals)
-  exceptions.acronyms.forEach(acronym => {
+  exceptions.acronyms.forEach((acronym) => {
     patterns.push(escapeRegex(acronym));
   });
 
   // Add existing regex patterns (already in regex format)
-  Object.values(exceptions.patterns).forEach(pattern => {
+  Object.values(exceptions.patterns).forEach((pattern) => {
     patterns.push(pattern);
   });
 
@@ -85,7 +85,9 @@ function hasTitleCaseViolation(text) {
   textWithoutQuotes = textWithoutQuotes.replace(/\\"[^"]*\\"/g, ''); // Remove \"text\"
 
   // Ignore single words (filter out empty strings from whitespace)
-  const words = textWithoutQuotes.split(/\s+/).filter(word => word.length > 0);
+  const words = textWithoutQuotes
+    .split(/\s+/)
+    .filter((word) => word.length > 0);
   if (words.length < 2) {
     return false;
   }
@@ -97,7 +99,10 @@ function hasTitleCaseViolation(text) {
   // Also catch patterns like "In Progress", "Not Available"
   const multipleCapsPattern = /\b[A-Z][a-z]+\s+[A-Z][a-z]+\b/;
 
-  return titleCasePattern.test(textWithoutQuotes) || multipleCapsPattern.test(textWithoutQuotes);
+  return (
+    titleCasePattern.test(textWithoutQuotes) ||
+    multipleCapsPattern.test(textWithoutQuotes)
+  );
 }
 
 // Helper function to convert to sentence case while preserving special cases
@@ -120,7 +125,11 @@ function toSentenceCase(text) {
     for (const acronym of sentenceCaseExceptions.acronyms) {
       let index = text.indexOf(acronym);
       while (index !== -1) {
-        specialTerms.push({ term: acronym, start: index, end: index + acronym.length });
+        specialTerms.push({
+          term: acronym,
+          start: index,
+          end: index + acronym.length,
+        });
         index = text.indexOf(acronym, index + 1);
       }
     }
@@ -132,7 +141,7 @@ function toSentenceCase(text) {
         return a.start - b.start;
       }
       // If same start position, prefer longer match
-      return (b.end - b.start) - (a.end - a.start);
+      return b.end - b.start - (a.end - a.start);
     });
 
     // Build result preserving special terms
@@ -168,7 +177,9 @@ function toSentenceCase(text) {
 
 // Simple sentence case conversion
 function convertToSentenceCase(text) {
-  if (!text) return text;
+  if (!text) {
+    return text;
+  }
 
   // Extract quoted text (single quotes and escaped double quotes) and preserve them
   const quotedTexts = [];
@@ -192,19 +203,25 @@ function convertToSentenceCase(text) {
   });
 
   // Convert to sentence case
-  const words = textToProcess.split(/\s+/).filter(word => word.length > 0);
-  let converted = words.map((word, index) => {
-    // Check if word contains a placeholder (exact match or with punctuation)
-    if (quotedTexts.some(q => word === q.placeholder || word.includes(q.placeholder))) {
-      return word;
-    }
-    if (index === 0) {
-      // First word: capitalize first letter
-      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-    }
-    // Other words: all lowercase
-    return word.toLowerCase();
-  }).join(' ');
+  const words = textToProcess.split(/\s+/).filter((word) => word.length > 0);
+  let converted = words
+    .map((word, index) => {
+      // Check if word contains a placeholder (exact match or with punctuation)
+      if (
+        quotedTexts.some(
+          (q) => word === q.placeholder || word.includes(q.placeholder),
+        )
+      ) {
+        return word;
+      }
+      if (index === 0) {
+        // First word: capitalize first letter
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      }
+      // Other words: all lowercase
+      return word.toLowerCase();
+    })
+    .join(' ');
 
   // Restore quoted text with unique placeholders
   quotedTexts.forEach(({ placeholder, text }) => {
@@ -505,14 +522,22 @@ async function verifyEnglishLocale() {
   const sentenceCaseViolations = validateSentenceCaseCompliance(englishLocale);
 
   if (sentenceCaseViolations.length) {
-    console.log(`**en**: ${sentenceCaseViolations.length} sentence case violations`);
+    console.log(
+      `**en**: ${sentenceCaseViolations.length} sentence case violations`,
+    );
     log.info(`Messages not following sentence case:`);
     sentenceCaseViolations.forEach(function (violation) {
-      log.info(`  - [ ] ${violation.key}: "${violation.current}" → "${violation.suggested}"`);
+      log.info(
+        `  - [ ] ${violation.key}: "${violation.current}" → "${violation.suggested}"`,
+      );
     });
   }
 
-  if (!unusedMessages.length && !templateUsage.length && !sentenceCaseViolations.length) {
+  if (
+    !unusedMessages.length &&
+    !templateUsage.length &&
+    !sentenceCaseViolations.length
+  ) {
     return false; // failed === false
   }
 
