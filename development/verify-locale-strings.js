@@ -84,8 +84,8 @@ function hasTitleCaseViolation(text) {
   let textWithoutQuotes = text.replace(/'[^']*'/g, ''); // Remove 'text'
   textWithoutQuotes = textWithoutQuotes.replace(/\\"[^"]*\\"/g, ''); // Remove \"text\"
 
-  // Ignore single words
-  const words = textWithoutQuotes.split(/\s+/);
+  // Ignore single words (filter out empty strings from whitespace)
+  const words = textWithoutQuotes.split(/\s+/).filter(word => word.length > 0);
   if (words.length < 2) {
     return false;
   }
