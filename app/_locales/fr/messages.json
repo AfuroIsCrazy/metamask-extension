@@ -1954,7 +1954,7 @@
     "message": "D’accord"
   },
   "deprecatedNetworkDescription": {
-    "message": "Le réseau auquel vous essayez de vous connecter n’est plus pris en charge par Metamask. $1"
+    "message": "Le réseau auquel vous essayez de vous connecter n’est plus pris en charge par MetaMask. $1"
   },
   "description": {
     "message": "Description"
@@ -2353,7 +2353,7 @@
     "message": "Saisir le mot de passe pour continuer"
   },
   "enterYourPasswordSocialLoginFlow": {
-    "message": "Saisir le mot de passe Metamask"
+    "message": "Saisir le mot de passe MetaMask"
   },
   "errorCode": {
     "message": "Code : $1",

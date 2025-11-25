@@ -1954,7 +1954,7 @@
     "message": "Понятно!"
   },
   "deprecatedNetworkDescription": {
-    "message": "Сеть, к которой вы пытаетесь подключиться, больше не поддерживается Metamask. $1"
+    "message": "Сеть, к которой вы пытаетесь подключиться, больше не поддерживается MetaMask. $1"
   },
   "description": {
     "message": "Описание"
@@ -4478,7 +4478,7 @@
     "description": "The description for the `endowment:assets` permission."
   },
   "permission_assetsDescription": {
-    "message": "Разрешить $1 предоставить информацию об активах клиенту Metamask. Активы могут быть в блокчейне или вне него.",
+    "message": "Разрешить $1 предоставить информацию об активах клиенту MetaMask. Активы могут быть в блокчейне или вне него.",
     "description": "An extended description for the `endowment:assets` permission. $1 is the name of the Snap."
   },
   "permission_cronjob": {

@@ -1954,7 +1954,7 @@
     "message": "Mengerti"
   },
   "deprecatedNetworkDescription": {
-    "message": "Jaringan yang Anda coba hubungkan tidak lagi didukung oleh Metamask. $1"
+    "message": "Jaringan yang Anda coba hubungkan tidak lagi didukung oleh MetaMask. $1"
   },
   "description": {
     "message": "Deskripsi"
@@ -2353,7 +2353,7 @@
     "message": "Masukkan kata sandi untuk melanjutkan"
   },
   "enterYourPasswordSocialLoginFlow": {
-    "message": "Masukkan Kata Sandi Metamask"
+    "message": "Masukkan Kata Sandi MetaMask"
   },
   "errorCode": {
     "message": "Kode: $1",

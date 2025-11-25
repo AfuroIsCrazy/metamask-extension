@@ -1954,7 +1954,7 @@
     "message": "Nakuha ko"
   },
   "deprecatedNetworkDescription": {
-    "message": "Ang network na sinusubukan mong ikonekta ay hindi na suportado ng Metamask. $1"
+    "message": "Ang network na sinusubukan mong ikonekta ay hindi na suportado ng MetaMask. $1"
   },
   "description": {
     "message": "Deskripsyon"
@@ -3307,7 +3307,7 @@
     "description": "$1 is the key 'loginErrorGenericSupport'"
   },
   "loginErrorGenericSupport": {
-    "message": "Suporta sa Metamask"
+    "message": "Suporta sa MetaMask"
   },
   "loginErrorGenericTitle": {
     "message": "Mayroong nang mali"

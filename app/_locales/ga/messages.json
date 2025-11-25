@@ -1935,7 +1935,7 @@
     "message": "Tuigim é."
   },
   "deprecatedNetworkDescription": {
-    "message": "Ní thacaíonn Metamask leis an líonra atá tú ag iarraidh ceangal leis a thuilleadh. $1"
+    "message": "Ní thacaíonn MetaMask leis an líonra atá tú ag iarraidh ceangal leis a thuilleadh. $1"
   },
   "description": {
     "message": "Cur síos"
@@ -2340,7 +2340,7 @@
     "message": "Cuir isteach focal faire le leanúint ar aghaidh"
   },
   "enterYourPasswordSocialLoginFlow": {
-    "message": "Cuir isteach Pasfhocal Metamask"
+    "message": "Cuir isteach Pasfhocal MetaMask"
   },
   "errorCode": {
     "message": "Cód: $1",
@@ -3304,7 +3304,7 @@
     "description": "$1 is the key 'loginErrorGenericSupport'"
   },
   "loginErrorGenericSupport": {
-    "message": "Tacaíocht Metamask"
+    "message": "Tacaíocht MetaMask"
   },
   "loginErrorGenericTitle": {
     "message": "Chuaigh rud éigin mícheart"

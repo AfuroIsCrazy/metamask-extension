@@ -2353,7 +2353,7 @@
     "message": "Nhập mật khẩu để tiếp tục"
   },
   "enterYourPasswordSocialLoginFlow": {
-    "message": "Nhập Mật khẩu Metamask"
+    "message": "Nhập Mật khẩu MetaMask"
   },
   "errorCode": {
     "message": "Mã: $1",

@@ -1951,7 +1951,7 @@
     "message": "知道了"
   },
   "deprecatedNetworkDescription": {
-    "message": "您尝试连接的网络不再由 Metamask 支持。$1"
+    "message": "您尝试连接的网络不再由 MetaMask 支持。$1"
   },
   "description": {
     "message": "描述"
