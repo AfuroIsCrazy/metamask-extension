@@ -125,14 +125,26 @@ function toSentenceCase(text) {
       }
     }
 
-    // Sort by position
-    specialTerms.sort((a, b) => a.start - b.start);
+    // Sort by position first, then by length descending (prefer longer matches)
+    // This ensures overlapping terms like "MetaMask Portfolio" are processed before "MetaMask"
+    specialTerms.sort((a, b) => {
+      if (a.start !== b.start) {
+        return a.start - b.start;
+      }
+      // If same start position, prefer longer match
+      return (b.end - b.start) - (a.end - a.start);
+    });
 
     // Build result preserving special terms
     let result = '';
     let lastIndex = 0;
 
     for (const special of specialTerms) {
+      // Skip overlapping terms (already covered by a previous term)
+      if (special.start < lastIndex) {
+        continue;
+      }
+
       // Process text before this special term
       const before = text.substring(lastIndex, special.start);
       if (before) {
