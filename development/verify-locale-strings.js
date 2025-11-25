@@ -166,7 +166,7 @@ function convertToSentenceCase(text) {
   });
 
   // Convert to sentence case
-  const words = textToProcess.split(/\s+/);
+  const words = textToProcess.split(/\s+/).filter(word => word.length > 0);
   let converted = words.map((word, index) => {
     if (word === placeholder) {
       return placeholder;
