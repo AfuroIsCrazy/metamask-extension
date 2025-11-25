@@ -47,7 +47,7 @@ function buildExceptionsRegex(exceptions) {
   const patterns = [];
 
   // Escape special regex characters for exact matches
-  const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
 
   // Add exact matches (escaped to treat as literals)
   exceptions.exactMatches.forEach((term) => {
@@ -65,7 +65,7 @@ function buildExceptionsRegex(exceptions) {
   });
 
   // Combine all patterns with OR operator
-  return new RegExp(patterns.join('|'));
+  return new RegExp(patterns.join('|'), 'u');
 }
 
 // Pre-compile the exceptions regex once at module load time
@@ -81,12 +81,12 @@ function containsSpecialCase(text) {
 function hasTitleCaseViolation(text) {
   // Remove quoted text (single quotes and escaped double quotes) before checking
   // Quoted text refers to UI elements and should preserve capitalization
-  let textWithoutQuotes = text.replace(/'[^']*'/g, ''); // Remove 'text'
-  textWithoutQuotes = textWithoutQuotes.replace(/\\"[^"]*\\"/g, ''); // Remove \"text\"
+  let textWithoutQuotes = text.replace(/'[^']*'/gu, ''); // Remove 'text'
+  textWithoutQuotes = textWithoutQuotes.replace(/\\"[^"]*\\"/gu, ''); // Remove \"text\"
 
   // Ignore single words (filter out empty strings from whitespace)
   const words = textWithoutQuotes
-    .split(/\s+/)
+    .split(/\s+/u)
     .filter((word) => word.length > 0);
   if (words.length < 2) {
     return false;
@@ -94,10 +94,10 @@ function hasTitleCaseViolation(text) {
 
   // Check if multiple words start with capital letters (Title Case pattern)
   // This pattern: "Word Word" or "Word Word Word"
-  const titleCasePattern = /^([A-Z][a-z]+\s+)+[A-Z][a-z]+/;
+  const titleCasePattern = /^([A-Z][a-z]+\s+)+[A-Z][a-z]+/u;
 
   // Also catch patterns like "In Progress", "Not Available"
-  const multipleCapsPattern = /\b[A-Z][a-z]+\s+[A-Z][a-z]+\b/;
+  const multipleCapsPattern = /\b[A-Z][a-z]+\s+[A-Z][a-z]+\b/u;
 
   return (
     titleCasePattern.test(textWithoutQuotes) ||
@@ -187,23 +187,23 @@ function convertToSentenceCase(text) {
   let placeholderIndex = 0;
 
   // Find all single-quoted text and replace with unique placeholders
-  textToProcess = textToProcess.replace(/'([^']*)'/g, (match) => {
+  textToProcess = textToProcess.replace(/'([^']*)'/gu, (match) => {
     const uniquePlaceholder = `___QUOTED_${placeholderIndex}___`;
     quotedTexts.push({ placeholder: uniquePlaceholder, text: match });
-    placeholderIndex++;
+    placeholderIndex += 1;
     return uniquePlaceholder;
   });
 
   // Find all escaped double-quoted text and replace with unique placeholders
-  textToProcess = textToProcess.replace(/\\"([^"]*)\\"/g, (match) => {
+  textToProcess = textToProcess.replace(/\\"([^"]*)\\"/gu, (match) => {
     const uniquePlaceholder = `___QUOTED_${placeholderIndex}___`;
     quotedTexts.push({ placeholder: uniquePlaceholder, text: match });
-    placeholderIndex++;
+    placeholderIndex += 1;
     return uniquePlaceholder;
   });
 
   // Convert to sentence case
-  const words = textToProcess.split(/\s+/).filter((word) => word.length > 0);
+  const words = textToProcess.split(/\s+/u).filter((word) => word.length > 0);
   let converted = words
     .map((word, index) => {
       // Check if word contains a placeholder (exact match or with punctuation)
@@ -224,8 +224,8 @@ function convertToSentenceCase(text) {
     .join(' ');
 
   // Restore quoted text with unique placeholders
-  quotedTexts.forEach(({ placeholder, text }) => {
-    converted = converted.replace(placeholder, text);
+  quotedTexts.forEach(({ placeholder, text: quotedText }) => {
+    converted = converted.replace(placeholder, quotedText);
   });
 
   return converted;
