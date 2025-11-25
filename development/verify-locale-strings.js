@@ -40,7 +40,6 @@ const {
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
-
 // Build and compile a single regex from all exceptions for performance
 function buildExceptionsRegex(exceptions) {
   const patterns = [];
