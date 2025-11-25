@@ -71,7 +71,6 @@ function buildExceptionsRegex(exceptions) {
 const specialCaseRegex = buildExceptionsRegex(sentenceCaseExceptions);
 
 // Helper function to check if text contains special case terms
-// Now uses pre-compiled regex for O(n) instead of O(n*m) performance
 function containsSpecialCase(text) {
   return specialCaseRegex.test(text);
 }
