@@ -42,30 +42,39 @@ const writeFile = promisify(fs.writeFile);
 // Load sentence case exceptions
 const sentenceCaseExceptions = require('../app/_locales/sentence-case-exceptions.json');
 
+// Build and compile a single regex from all exceptions for performance
+function buildExceptionsRegex(exceptions) {
+  const patterns = [];
+
+  // Escape special regex characters for exact matches
+  const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  // Add exact matches (escaped to treat as literals)
+  exceptions.exactMatches.forEach(term => {
+    patterns.push(escapeRegex(term));
+  });
+
+  // Add acronyms (escaped to treat as literals)
+  exceptions.acronyms.forEach(acronym => {
+    patterns.push(escapeRegex(acronym));
+  });
+
+  // Add existing regex patterns (already in regex format)
+  Object.values(exceptions.patterns).forEach(pattern => {
+    patterns.push(pattern);
+  });
+
+  // Combine all patterns with OR operator
+  return new RegExp(patterns.join('|'));
+}
+
+// Pre-compile the exceptions regex once at module load time
+const specialCaseRegex = buildExceptionsRegex(sentenceCaseExceptions);
+
 // Helper function to check if text contains special case terms
-function containsSpecialCase(text, exceptions) {
-  // Check exact matches
-  for (const term of exceptions.exactMatches) {
-    if (text.includes(term)) {
-      return true;
-    }
-  }
-
-  // Check acronyms
-  for (const acronym of exceptions.acronyms) {
-    if (text.includes(acronym)) {
-      return true;
-    }
-  }
-
-  // Check patterns
-  for (const pattern of Object.values(exceptions.patterns)) {
-    if (new RegExp(pattern).test(text)) {
-      return true;
-    }
-  }
-
-  return false;
+// Now uses pre-compiled regex for O(n) instead of O(n*m) performance
+function containsSpecialCase(text) {
+  return specialCaseRegex.test(text);
 }
 
 // Helper function to detect title case violations
@@ -92,14 +101,14 @@ function hasTitleCaseViolation(text) {
 }
 
 // Helper function to convert to sentence case while preserving special cases
-function toSentenceCase(text, exceptions) {
+function toSentenceCase(text) {
   // If text contains special cases, we need to be careful
-  if (containsSpecialCase(text, exceptions)) {
+  if (containsSpecialCase(text)) {
     // Build a map of special terms and their positions
     const specialTerms = [];
 
-    // Find all special terms
-    for (const term of exceptions.exactMatches) {
+    // Find all special terms from exact matches
+    for (const term of sentenceCaseExceptions.exactMatches) {
       let index = text.indexOf(term);
       while (index !== -1) {
         specialTerms.push({ term, start: index, end: index + term.length });
@@ -107,7 +116,8 @@ function toSentenceCase(text, exceptions) {
       }
     }
 
-    for (const acronym of exceptions.acronyms) {
+    // Find all acronyms
+    for (const acronym of sentenceCaseExceptions.acronyms) {
       let index = text.indexOf(acronym);
       while (index !== -1) {
         specialTerms.push({ term: acronym, start: index, end: index + acronym.length });
@@ -188,7 +198,7 @@ function convertToSentenceCase(text) {
 }
 
 // Validate sentence case compliance for a locale
-function validateSentenceCaseCompliance(locale, exceptions) {
+function validateSentenceCaseCompliance(locale) {
   const violations = [];
 
   for (const [key, value] of Object.entries(locale)) {
@@ -199,13 +209,13 @@ function validateSentenceCaseCompliance(locale, exceptions) {
     const text = value.message;
 
     // Skip if contains special cases
-    if (containsSpecialCase(text, exceptions)) {
+    if (containsSpecialCase(text)) {
       continue;
     }
 
     // Check for title case violations
     if (hasTitleCaseViolation(text)) {
-      const suggested = toSentenceCase(text, exceptions);
+      const suggested = toSentenceCase(text);
       violations.push({
         key,
         current: text,
@@ -475,10 +485,7 @@ async function verifyEnglishLocale() {
   }
 
   // Check sentence case compliance
-  const sentenceCaseViolations = validateSentenceCaseCompliance(
-    englishLocale,
-    sentenceCaseExceptions,
-  );
+  const sentenceCaseViolations = validateSentenceCaseCompliance(englishLocale);
 
   if (sentenceCaseViolations.length) {
     console.log(`**en**: ${sentenceCaseViolations.length} sentence case violations`);
