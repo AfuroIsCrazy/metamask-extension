@@ -102,6 +102,14 @@ function getClientOptions() {
     // `false`.
     sendClientReports: false,
     tracesSampleRate: getTracesSampleRate(sentryTarget),
+    // error sample rate
+    ignoreErrors: [
+      // Ignore "Script error." errors
+      // See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Errors_and_exceptions#Script_error
+      // 'Script error.',
+      // all
+      /.*/u,
+    ],
     transport: makeTransport,
   };
 }
