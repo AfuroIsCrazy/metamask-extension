@@ -172,26 +172,31 @@ function convertToSentenceCase(text) {
 
   // Extract quoted text (single quotes and escaped double quotes) and preserve them
   const quotedTexts = [];
-  const placeholder = '___QUOTED___';
   let textToProcess = text;
+  let placeholderIndex = 0;
 
-  // Find all single-quoted text and replace with placeholders
+  // Find all single-quoted text and replace with unique placeholders
   textToProcess = textToProcess.replace(/'([^']*)'/g, (match) => {
-    quotedTexts.push(match); // Store the full match including quotes
-    return placeholder;
+    const uniquePlaceholder = `___QUOTED_${placeholderIndex}___`;
+    quotedTexts.push({ placeholder: uniquePlaceholder, text: match });
+    placeholderIndex++;
+    return uniquePlaceholder;
   });
 
-  // Find all escaped double-quoted text and replace with placeholders
+  // Find all escaped double-quoted text and replace with unique placeholders
   textToProcess = textToProcess.replace(/\\"([^"]*)\\"/g, (match) => {
-    quotedTexts.push(match); // Store the full match including escaped quotes
-    return placeholder;
+    const uniquePlaceholder = `___QUOTED_${placeholderIndex}___`;
+    quotedTexts.push({ placeholder: uniquePlaceholder, text: match });
+    placeholderIndex++;
+    return uniquePlaceholder;
   });
 
   // Convert to sentence case
   const words = textToProcess.split(/\s+/).filter(word => word.length > 0);
   let converted = words.map((word, index) => {
-    if (word === placeholder) {
-      return placeholder;
+    // Check if word contains a placeholder (exact match or with punctuation)
+    if (quotedTexts.some(q => word === q.placeholder || word.includes(q.placeholder))) {
+      return word;
     }
     if (index === 0) {
       // First word: capitalize first letter
@@ -201,9 +206,9 @@ function convertToSentenceCase(text) {
     return word.toLowerCase();
   }).join(' ');
 
-  // Restore quoted text
-  quotedTexts.forEach((quotedText) => {
-    converted = converted.replace(placeholder, quotedText);
+  // Restore quoted text with unique placeholders
+  quotedTexts.forEach(({ placeholder, text }) => {
+    converted = converted.replace(placeholder, text);
   });
 
   return converted;
