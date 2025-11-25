@@ -1,4 +1,19 @@
 {
+  "acronyms": [
+    "NFT",
+    "API",
+    "RPC",
+    "URL",
+    "QR",
+    "ENS",
+    "DeFi",
+    "ID",
+    "SegWit",
+    "BNB",
+    "BSC",
+    "IP"
+  ],
+  "description": "This file contains exceptions to sentence case rules for MetaMask locale strings. Terms listed here are allowed to use title case.",
   "exactMatches": [
     "Secret Recovery Phrase",
     "Private Key",
@@ -41,23 +56,8 @@
     "Third Party Service",
     "Third Party Services"
   ],
-  "acronyms": [
-    "NFT",
-    "API",
-    "RPC",
-    "URL",
-    "QR",
-    "ENS",
-    "DeFi",
-    "ID",
-    "SegWit",
-    "BNB",
-    "BSC",
-    "IP"
-  ],
   "patterns": {
     "testNetworks": "\\b(Goerli|Sepolia|Rinkeby|Ropsten|Kovan)\\s+Test\\s+Network\\b",
     "navigationPaths": "Settings\\s*>|Advanced\\s*>|Network\\s*>"
-  },
-  "description": "This file contains exceptions to sentence case rules for MetaMask locale strings. Terms listed here are allowed to use title case."
+  }
 }
