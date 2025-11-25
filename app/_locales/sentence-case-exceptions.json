@@ -53,7 +53,9 @@
     "Content-Security-Policy",
     "MetaMetrics",
     "Third Party Service",
-    "Third Party Services"
+    "Third Party Services",
+    "Terms of Use",
+    "Privacy Notice"
   ],
   "patterns": {
     "testNetworks": "\\b(Goerli|Sepolia|Rinkeby|Ropsten|Kovan)\\s+Test\\s+Network\\b",
