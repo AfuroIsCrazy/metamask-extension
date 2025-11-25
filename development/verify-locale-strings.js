@@ -539,21 +539,24 @@ async function verifyEnglishLocale() {
     return false; // failed === false
   }
 
-  if (unusedMessages.length > 0 && fix) {
+  // Apply fixes if --fix flag is used
+  // Combine both unused message deletions and sentence case fixes into a single write
+  if ((unusedMessages.length > 0 || sentenceCaseViolations.length > 0) && fix) {
     const newLocale = { ...englishLocale };
+
+    // Remove unused messages
     for (const key of unusedMessages) {
       delete newLocale[key];
     }
-    await writeLocale('en', newLocale);
-  }
 
-  if (sentenceCaseViolations.length > 0 && fix) {
-    const newLocale = { ...englishLocale };
+    // Apply sentence case fixes
     for (const violation of sentenceCaseViolations) {
       if (newLocale[violation.key]) {
         newLocale[violation.key].message = violation.suggested;
       }
     }
+
+    // Write once with all changes applied
     await writeLocale('en', newLocale);
   }
 
