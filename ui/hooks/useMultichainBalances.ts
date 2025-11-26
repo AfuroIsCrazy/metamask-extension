@@ -10,6 +10,10 @@ import { type InternalAccount } from '@metamask/keyring-internal-api';
 import { BigNumber } from 'bignumber.js';
 import { AssetType } from '../../shared/constants/transaction';
 import {
+  TRON_RESOURCE_SYMBOLS_SET,
+  type TronResourceSymbol,
+} from '../../shared/constants/multichain/assets';
+import {
   getAccountAssets,
   getAssetsMetadata,
   getAssetsRates,
@@ -150,11 +154,19 @@ export const useMultichainBalances = (
 
   // return TokenWithFiat sorted by fiat balance amount
   const assetsWithBalance = useMemo(() => {
+    // Filter out Tron energy/bandwidth resources before combining
+    const filteredTronBalances = tronBalancesWithFiat.filter(
+      (token) =>
+        !TRON_RESOURCE_SYMBOLS_SET.has(
+          token.symbol.toLowerCase() as TronResourceSymbol,
+        ),
+    );
+
     return [
       ...evmBalancesWithFiatByChainId,
       ...solanaBalancesWithFiat,
       ...bitcoinBalancesWithFiat,
-      ...tronBalancesWithFiat,
+      ...filteredTronBalances,
     ]
       .map((token) => ({
         ...token,
@@ -170,11 +182,19 @@ export const useMultichainBalances = (
 
   // return total fiat balances by chainId/caipChainId
   const balanceByChainId = useMemo(() => {
+    // Filter out Tron energy/bandwidth resources
+    const filteredTronBalances = tronBalancesWithFiat.filter(
+      (token) =>
+        !TRON_RESOURCE_SYMBOLS_SET.has(
+          token.symbol.toLowerCase() as TronResourceSymbol,
+        ),
+    );
+
     return [
       ...evmBalancesWithFiatByChainId,
       ...solanaBalancesWithFiat,
       ...bitcoinBalancesWithFiat,
-      ...tronBalancesWithFiat,
+      ...filteredTronBalances,
     ].reduce((acc: Record<Hex | CaipChainId, number>, tokenWithBalanceData) => {
       if (!acc[tokenWithBalanceData.chainId]) {
         acc[tokenWithBalanceData.chainId] = 0;

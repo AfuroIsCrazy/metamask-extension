@@ -237,6 +237,7 @@ import { AddressBookPetnamesBridge } from './lib/AddressBookPetnamesBridge';
 import { AccountIdentitiesPetnamesBridge } from './lib/AccountIdentitiesPetnamesBridge';
 import { WalletFundsObtainedMonitor } from './lib/WalletFundsObtainedMonitor';
 import { createPPOMMiddleware } from './lib/ppom/ppom-middleware';
+import { createDappSwapMiddleware } from './lib/dapp-swap/dapp-swap-middleware';
 import { createTrustSignalsMiddleware } from './lib/trust-signals/trust-signals-middleware';
 import {
   onMessageReceived,
@@ -584,10 +585,11 @@ export default class MetamaskController extends EventEmitter {
       PermissionLogController: PermissionLogControllerInit,
       SubjectMetadataController: SubjectMetadataControllerInit,
       AppStateController: AppStateControllerInit,
+      OnboardingController: OnboardingControllerInit,
+      RemoteFeatureFlagController: RemoteFeatureFlagControllerInit,
       NetworkController: NetworkControllerInit,
       MetaMetricsController: MetaMetricsControllerInit,
       MetaMetricsDataDeletionController: MetaMetricsDataDeletionControllerInit,
-      RemoteFeatureFlagController: RemoteFeatureFlagControllerInit,
       GasFeeController: GasFeeControllerInit,
       UserOperationController: UserOperationControllerInit,
       ExecutionService: ExecutionServiceInit,
@@ -604,7 +606,6 @@ export default class MetamaskController extends EventEmitter {
       AccountActivityService: AccountActivityServiceInit,
       PPOMController: PPOMControllerInit,
       PhishingController: PhishingControllerInit,
-      OnboardingController: OnboardingControllerInit,
       AccountTrackerController: AccountTrackerControllerInit,
       TransactionController: TransactionControllerInit,
       SmartTransactionsController: SmartTransactionsControllerInit,
@@ -2912,6 +2913,10 @@ export default class MetamaskController extends EventEmitter {
         appStateController.getLastInteractedConfirmationInfo.bind(
           appStateController,
         ),
+      deleteDappSwapComparisonData:
+        appStateController.deleteDappSwapComparisonData.bind(
+          appStateController,
+        ),
       setLastInteractedConfirmationInfo:
         appStateController.setLastInteractedConfirmationInfo.bind(
           appStateController,
@@ -2992,6 +2997,10 @@ export default class MetamaskController extends EventEmitter {
         this.restoreSocialBackupAndGetSeedPhrase.bind(this),
       syncSeedPhrases: this.syncSeedPhrases.bind(this),
       changePassword: this.changePassword.bind(this),
+      getIsSeedlessOnboardingUserAuthenticated:
+        this.seedlessOnboardingController.getIsUserAuthenticated.bind(
+          this.seedlessOnboardingController,
+        ),
 
       // GatorPermissionsController
       fetchAndUpdateGatorPermissions:
@@ -5203,12 +5212,13 @@ export default class MetamaskController extends EventEmitter {
     }
 
     await this.accountsController.updateAccounts();
-    ///: BEGIN:ONLY_INCLUDE_IF(multichain)
+
     // Init multichain accounts after creating internal accounts.
     await this.multichainAccountService.init();
-    ///: END:ONLY_INCLUDE_IF
+
     // Force account-tree refresh after all accounts have been updated.
     this.accountTreeController.init();
+
     // TODO: Move this logic to the SnapKeyring directly.
     // Forward selected accounts to the Snap keyring, so each Snaps can fetch those accounts.
     await this.forwardSelectedAccountGroupToSnapKeyring(
@@ -5217,12 +5227,23 @@ export default class MetamaskController extends EventEmitter {
     );
 
     if (this.isMultichainAccountsFeatureState2Enabled()) {
-      // This allows to create missing accounts if new account providers have been added.
+      const resyncAndAlignAccounts = async () => {
+        // READ THIS CAREFULLY:
+        // There is/was a bug with Snap accounts that can be desynchronized (Solana). To
+        // automatically "fix" this corrupted state, we run this method which will re-sync
+        // MetaMask accounts and Snap accounts upon login.
+        // BUG: https://github.com/MetaMask/metamask-extension/issues/37228
+        await this.multichainAccountService.resyncAccounts();
+
+        // This allows to create missing accounts if new account providers have been added.
+        await this.multichainAccountService.alignWallets();
+      };
+
       // FIXME: We might wanna run discovery + alignment asynchronously here, like we do
-      // for mobile, but for now, this easy fix should cover new provider accounts.
+      // for mobile.
       // NOTE: We run this asynchronously on purpose, see FIXME^.
       // eslint-disable-next-line no-void
-      void this.multichainAccountService.alignWallets();
+      void resyncAndAlignAccounts();
     }
   }
 
@@ -7039,6 +7060,25 @@ export default class MetamaskController extends EventEmitter {
         this.updateSecurityAlertResponse.bind(this),
         this.getSecurityAlertsConfig.bind(this),
       ),
+    );
+
+    engine.push(
+      createDappSwapMiddleware({
+        fetchQuotes: this.controllerMessenger.call.bind(
+          this.controllerMessenger,
+          `${BRIDGE_CONTROLLER_NAME}:${BridgeBackgroundAction.FETCH_QUOTES}`,
+        ),
+        setSwapQuotes: this.appStateController.setDappSwapComparisonData.bind(
+          this.appStateController,
+        ),
+        getNetworkConfigurationByNetworkClientId:
+          this.networkController.getNetworkConfigurationByNetworkClientId.bind(
+            this.networkController,
+          ),
+        dappSwapMetricsFlag:
+          this.remoteFeatureFlagController?.state?.remoteFeatureFlags
+            ?.dappSwapMetrics,
+      }),
     );
 
     engine.push(

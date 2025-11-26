@@ -63,7 +63,8 @@ import {
   NETWORK_TO_SHORT_NETWORK_NAME_MAP,
 } from '../../../shared/constants/bridge';
 import { createDeepEqualSelector } from '../../../shared/modules/selectors/util';
-import { FEATURED_RPCS } from '../../../shared/constants/network';
+import { getNetworkConfigurationsByChainId } from '../../../shared/modules/selectors/networks';
+import { CHAIN_IDS, FEATURED_RPCS } from '../../../shared/constants/network';
 import {
   getMultichainBalances,
   getMultichainCoinRates,
@@ -331,20 +332,34 @@ export const getFromChains = createDeepEqualSelector(
 /**
  * This matches the network filter in the activity and asset lists
  */
-export const getLastSelectedChain = createSelector(
+export const getLastSelectedChainId = createSelector(
   [getAllEnabledNetworksForAllNamespaces, getFromChains],
-  (enabledEvmNetworks, fromChains) => {
-    // If there is no network filter, return first chain ranked by bridge feature flags
-    if (enabledEvmNetworks.length > 1) {
-      return fromChains[0]; // TODO use bip44 default
+  (allEnabledNetworksForAllNamespaces, fromChains) => {
+    // If there is no network filter, return mainnet
+    if (allEnabledNetworksForAllNamespaces.length > 1) {
+      return CHAIN_IDS.MAINNET;
     }
     // Find the matching bridge fromChain for the selected network filter
     return fromChains.find(
       ({ chainId: fromChainId }) =>
-        fromChainId === formatChainIdToCaip(enabledEvmNetworks[0]),
-    );
+        fromChainId === allEnabledNetworksForAllNamespaces[0],
+    )?.chainId;
   },
 );
+
+// export const getFromChain = createDeepEqualSelector(
+//   [getFromChains, getMultichainProviderConfig],
+//   (fromChains, providerConfig) => {
+//     // When the page loads the global network always matches the network filter
+//     // Because useBridging checks whether the lastSelectedNetwork matches the provider config
+//     // Then useBridgeQueryParams sets the global network to lastSelectedNetwork as needed
+//     // TODO remove providerConfig references and just use getLastSelectedChainId
+//     return (
+//       fromChains.find(({ chainId }) => chainId === providerConfig?.chainId) ??
+//       fromChains[0]
+//     );
+//   },
+// );
 
 export const getToChains = createDeepEqualSelector(
   [getAllBridgeableNetworks, getChainRanking],
@@ -864,8 +879,9 @@ export const getValidationErrors = createDeepEqualSelector(
     nativeBalance,
     fromTokenBalance,
   ) => {
-    const { gasIncluded, gasIncluded7702 } = activeQuote?.quote ?? {};
-    const isGasless = gasIncluded7702 || gasIncluded;
+    const { gasIncluded, gasIncluded7702, gasSponsored } =
+      activeQuote?.quote ?? {};
+    const isGasless = gasIncluded7702 || gasIncluded || gasSponsored;
 
     const srcChainId =
       quoteRequest.srcChainId ?? activeQuote?.quote?.srcChainId;

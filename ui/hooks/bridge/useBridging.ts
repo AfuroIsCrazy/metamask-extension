@@ -37,7 +37,7 @@ import { ALL_ALLOWED_BRIDGE_CHAIN_IDS } from '../../../shared/constants/bridge';
 import {
   getFromChain,
   getFromChains,
-  getLastSelectedChain,
+  getLastSelectedChainId,
 } from '../../ducks/bridge/selectors';
 import { CHAIN_IDS } from '../../../shared/constants/network';
 import { getMultichainProviderConfig } from '../../selectors/multichain';
@@ -51,7 +51,7 @@ const useBridging = () => {
   const isMetaMetricsEnabled = useSelector(getParticipateInMetaMetrics);
   const isMarketingEnabled = useSelector(getDataCollectionForMarketing);
 
-  const lastSelectedChain = useSelector(getLastSelectedChain);
+  const lastSelectedChainId = useSelector(getLastSelectedChainId);
   const fromChain = useSelector(getFromChain);
   const fromChains = useSelector(getFromChains);
   /**
@@ -90,20 +90,15 @@ const useBridging = () => {
        *
        * default fromChain: srctoken.chainId > lastSelectedId > MAINNET
        */
-      const targetChainIdInCaip =
-        lastSelectedChain?.chainId &&
-        isChainIdEnabledForBridging(lastSelectedChain.chainId)
-          ? formatChainIdToCaip(lastSelectedChain.chainId)
-          : 'eip155:1';
-
-      const providerChainIdInCaip = isCaipChainId(providerConfig?.chainId)
-        ? providerConfig?.chainId
-        : toEvmCaipChainId(providerConfig?.chainId);
-      if (!srcAssetIdToUse && targetChainIdInCaip !== providerChainIdInCaip) {
+      const targetChainId =
+        lastSelectedChainId && isChainIdEnabledForBridging(lastSelectedChainId)
+          ? lastSelectedChainId
+          : CHAIN_IDS.MAINNET;
+      if (!srcAssetIdToUse && targetChainId !== fromChain?.chainId) {
         // If the selectedNetwork is not supported or if the network filter is not the active network, set this so the bridge-api sets the network on load
         // TODO should this just set fromChain directly?
-        dispatch(setFromToken({ chainId: targetChainIdInCaip }));
-        // srcAssetIdToUse = getNativeAssetForChainId(targetChainIdInCaip)?.assetId;
+        dispatch(setFromToken({ chainId: formatChainIdToCaip(targetChainId) }));
+        // srcAssetIdToUse = getNativeAssetForChainId(targetChainId)?.assetId;
       }
 
       trace({
@@ -122,9 +117,7 @@ const useBridging = () => {
           // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
           // eslint-disable-next-line @typescript-eslint/naming-convention
           chain_id:
-            srcToken?.chainId ??
-            lastSelectedChain?.chainId ??
-            CHAIN_IDS.MAINNET,
+            srcToken?.chainId ?? lastSelectedChainId ?? CHAIN_IDS.MAINNET,
         },
       });
       dispatch(
@@ -158,9 +151,9 @@ const useBridging = () => {
       trackEvent,
       isMetaMetricsEnabled,
       isMarketingEnabled,
+      lastSelectedChainId,
       fromChain?.chainId,
-      lastSelectedChain?.chainId,
-      providerConfig?.chainId,
+      lastSelectedChainId,
       isChainIdEnabledForBridging,
     ],
   );

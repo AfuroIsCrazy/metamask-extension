@@ -5,6 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { BigNumber } from 'bignumber.js';
 import { useSelector, useDispatch } from 'react-redux';
 import classnames from 'classnames';
 import { debounce } from 'lodash';
@@ -56,6 +57,7 @@ import {
   getFromAccount,
   getIsStxEnabled,
   getIsGasIncluded,
+  getFromTokenBalance,
 } from '../../../ducks/bridge/selectors';
 import {
   AvatarFavicon,
@@ -82,6 +84,7 @@ import { calcTokenValue } from '../../../../shared/lib/swaps-utils';
 import {
   formatTokenAmount,
   isQuoteExpiredOrInvalid as isQuoteExpiredOrInvalidUtil,
+  safeAmountForCalc,
 } from '../utils/quote';
 import MascotBackgroundAnimation from '../../swaps/mascot-background-animation/mascot-background-animation';
 import { Column } from '../layout';
@@ -191,6 +194,7 @@ const PrepareBridgePage = ({
   const slippage = useSelector(getSlippage);
 
   const quoteRequest = useSelector(getQuoteRequest);
+  const fromTokenBalance = useSelector(getFromTokenBalance);
   const {
     isLoading,
     // This quote may be older than the refresh rate, but we keep it for display purposes
@@ -312,6 +316,19 @@ const PrepareBridgePage = ({
 
   const isToOrFromNonEvm = useSelector(getIsToOrFromNonEvm);
 
+  const insufficientBalOverride = useMemo(() => {
+    if (
+      !fromChain ||
+      !isNonEvmChainId(fromChain.chainId) ||
+      !fromAmount ||
+      !fromTokenBalance
+    ) {
+      return undefined;
+    }
+
+    return new BigNumber(fromTokenBalance).lt(safeAmountForCalc(fromAmount));
+  }, [fromAmount, fromChain, fromTokenBalance]);
+
   const quoteParams:
     | Parameters<BridgeController['updateBridgeQuoteRequestParams']>[0]
     | undefined = useMemo(() => {
@@ -328,11 +345,7 @@ const PrepareBridgePage = ({
       destTokenAddress: toAssetReference ?? toToken?.assetId,
       srcTokenAmount:
         fromAmount && fromToken?.decimals
-          ? calcTokenValue(
-              // Treat empty or incomplete amount as 0 to reject NaN
-              ['', '.'].includes(fromAmount) ? '0' : fromAmount,
-              fromToken.decimals,
-            )
+          ? calcTokenValue(safeAmountForCalc(fromAmount), fromToken.decimals)
               .toFixed()
               // Length of decimal part cannot exceed token.decimals
               .split('.')[0]
@@ -344,7 +357,7 @@ const PrepareBridgePage = ({
       // balance is less than the tenderly balance
       insufficientBal: providerConfig?.rpcUrl?.includes('localhost')
         ? true
-        : undefined,
+        : insufficientBalOverride,
       slippage,
       walletAddress: selectedAccount.address,
       destWalletAddress: selectedDestinationAccount?.address,
@@ -362,18 +375,23 @@ const PrepareBridgePage = ({
     providerConfig?.rpcUrl,
     gasIncluded,
     gasIncluded7702,
+    insufficientBalOverride,
   ]);
 
-  const debouncedUpdateQuoteRequestInController = useCallback(
+  // `useRef` is used here to manually memoize a function reference.
+  // `useCallback` and React Compiler don't understand that `debounce` returns an inline function reference.
+  // The function contains reactive dependencies, but they are `dispatch` and an action,
+  // making it safe not to worry about recreating this function on dependency updates.
+  const debouncedUpdateQuoteRequestInController = useRef(
     debounce((...args: Parameters<typeof updateQuoteRequestParams>) => {
       dispatch(updateQuoteRequestParams(...args));
     }, 300),
-    [dispatch],
   );
 
   useEffect(() => {
     return () => {
-      debouncedUpdateQuoteRequestInController.cancel();
+      // This `ref` is safe from unintended mutations, because it points to a function reference, not any reactive node or element.
+      debouncedUpdateQuoteRequestInController.current.cancel();
     };
   }, []);
 
@@ -398,8 +416,10 @@ const PrepareBridgePage = ({
         Boolean,
       ) as string[],
     };
-    debouncedUpdateQuoteRequestInController(quoteParams, eventProperties);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    debouncedUpdateQuoteRequestInController.current(
+      quoteParams,
+      eventProperties,
+    );
   }, [quoteParams]);
 
   // Use smart slippage defaults
@@ -616,9 +636,7 @@ const PrepareBridgePage = ({
             }}
             networks={toChains}
             amountInFiat={
-              // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-              activeQuote?.toTokenAmount?.valueInCurrency || undefined
+              activeQuote?.toTokenAmount?.valueInCurrency ?? undefined
             }
             amountFieldProps={{
               testId: 'to-amount',
@@ -682,7 +700,7 @@ const PrepareBridgePage = ({
                   if (!quoteParams) {
                     return;
                   }
-                  debouncedUpdateQuoteRequestInController(quoteParams, {
+                  debouncedUpdateQuoteRequestInController.current(quoteParams, {
                     // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
                     // eslint-disable-next-line @typescript-eslint/naming-convention
                     stx_enabled: smartTransactionsEnabled,

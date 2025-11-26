@@ -1,5 +1,6 @@
 import { zeroAddress } from 'ethereumjs-util';
 import {
+  ALLOWED_BRIDGE_CHAIN_IDS,
   ChainId,
   type QuoteMetadata,
   type QuoteResponse,

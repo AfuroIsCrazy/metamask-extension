@@ -16,7 +16,11 @@ import {
 } from '../../../components/component-library';
 import { useI18nContext } from '../../../hooks/useI18nContext';
 import { getCurrentCurrency } from '../../../ducks/metamask/metamask';
-import { formatCurrencyAmount, formatTokenAmount } from '../utils/quote';
+import {
+  formatCurrencyAmount,
+  formatTokenAmount,
+  sanitizeAmountInput,
+} from '../utils/quote';
 import { Column, Row } from '../layout';
 import {
   Display,
@@ -43,17 +47,6 @@ import { AssetPickerTokenList } from './components/asset-list';
 import { BridgeAssetPickerButton } from './components/asset-picker-button';
 import { BridgeAssetPicker } from './components/asset-picker';
 import { AssetPickerNetworkPopover } from './components/asset-picker-network-popover';
-
-const sanitizeAmountInput = (textToSanitize: string) => {
-  // Remove characters that are not numbers or decimal points if rendering a controlled or pasted value
-  return (
-    textToSanitize
-      .replace(/[^\d.]+/gu, '')
-      // Only allow one decimal point, ignore digits after second decimal point
-      .split('.', 2)
-      .join('.')
-  );
-};
 
 export const BridgeInputGroup = ({
   header,

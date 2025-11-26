@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux';
 
 import { setAccountDetailsAddress } from '../../../../store/actions';
 import useCurrentConfirmation from '../../hooks/useCurrentConfirmation';
-import syncConfirmPath from '../../hooks/syncConfirmPath';
+import useSyncConfirmPath from '../../hooks/useSyncConfirmPath';
 import { Confirmation } from '../../types/confirm';
 
 export type ConfirmContextType = {
@@ -26,11 +26,12 @@ export const ConfirmContext = createContext<ConfirmContextType | undefined>(
 
 export const ConfirmContextProvider: React.FC<{
   children: ReactElement;
-}> = ({ children }) => {
+  confirmationId?: string;
+}> = ({ children, confirmationId }) => {
   const [isScrollToBottomCompleted, setIsScrollToBottomCompleted] =
     useState(true);
-  const { currentConfirmation } = useCurrentConfirmation();
-  syncConfirmPath(currentConfirmation);
+  const { currentConfirmation } = useCurrentConfirmation(confirmationId);
+  useSyncConfirmPath(currentConfirmation, confirmationId);
   const dispatch = useDispatch();
 
   const value = useMemo(
@@ -64,9 +65,7 @@ export const ConfirmContextProvider: React.FC<{
   );
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export const useConfirmContext = <T = Confirmation,>() => {
+export const useConfirmContext = <CurrentConfirmation = Confirmation,>() => {
   const context = useContext(ConfirmContext);
   if (!context) {
     throw new Error(
@@ -74,7 +73,7 @@ export const useConfirmContext = <T = Confirmation,>() => {
     );
   }
   return context as {
-    currentConfirmation: T;
+    currentConfirmation: CurrentConfirmation;
     isScrollToBottomCompleted: boolean;
     setIsScrollToBottomCompleted: (isScrollToBottomCompleted: boolean) => void;
   };
