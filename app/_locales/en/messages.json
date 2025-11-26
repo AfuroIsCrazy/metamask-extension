@@ -434,7 +434,7 @@
     "message": "The token's on-chain history reveals prior instances of suspicious airdrop activities."
   },
   "airDropPatternTitle": {
-    "message": "Airdrop pattern"
+    "message": "Airdrop Pattern"
   },
   "airgapVault": {
     "message": "AirGap Vault"
@@ -449,7 +449,7 @@
     "message": "Account type"
   },
   "alertActionBurnAddress": {
-    "message": "Sending assets to burn address"
+    "message": "Sending Assets to Burn Address"
   },
   "alertActionBuyWithNativeCurrency": {
     "message": "Buy $1"
@@ -524,7 +524,7 @@
     "message": "I have acknowledged the risk and still want to proceed"
   },
   "alertModalDetails": {
-    "message": "Alert details"
+    "message": "Alert Details"
   },
   "alertModalReviewAllAlerts": {
     "message": "Review all alerts"
@@ -619,10 +619,10 @@
     "message": "Amount"
   },
   "amountReceived": {
-    "message": "Amount received"
+    "message": "Amount Received"
   },
   "amountSent": {
-    "message": "Amount sent"
+    "message": "Amount Sent"
   },
   "andForListItems": {
     "message": "$1, and $2",
@@ -848,7 +848,7 @@
     "message": "MetaMask Beta Version"
   },
   "betaTerms": {
-    "message": "Beta Terms of Use"
+    "message": "Beta Terms of use"
   },
   "blockExplorerAccountAction": {
     "message": "Account",
@@ -894,7 +894,7 @@
     "message": "If you confirm this request, you’re allowing a scammer to withdraw and spend your assets. You won’t get them back."
   },
   "blockaidDescriptionApproveFarming": {
-    "message": "If you approve this request, a third-party known for scams might take all your assets."
+    "message": "If you approve this request, a third party known for scams might take all your assets."
   },
   "blockaidDescriptionBlurFarming": {
     "message": "If you approve this request, someone can steal your assets listed on Blur."
@@ -912,7 +912,7 @@
     "message": "If you approve this request, someone can steal your assets listed on OpenSea."
   },
   "blockaidDescriptionTransferFarming": {
-    "message": "If you approve this request, a third-party known for scams will take all your assets."
+    "message": "If you approve this request, a third party known for scams will take all your assets."
   },
   "blockaidMessage": {
     "message": "Privacy preserving - no data is shared with third parties. Available on Arbitrum, Avalanche, BNB chain, Ethereum Mainnet, Linea, Optimism, Polygon, Base and Sepolia."
@@ -1037,7 +1037,7 @@
     "message": "Price impact"
   },
   "bridgePriceImpactWarningTitle": {
-    "message": "Price impact warning"
+    "message": "Price Impact Warning"
   },
   "bridgeQuoteExpired": {
     "message": "Your quote timed out."
@@ -1069,7 +1069,7 @@
     "description": "Status text indicating a bridge transaction has failed."
   },
   "bridgeStatusInProgress": {
-    "message": "In progress",
+    "message": "In Progress",
     "description": "Status text indicating a bridge transaction is currently processing."
   },
   "bridgeStepActionBridgeComplete": {
@@ -1186,7 +1186,7 @@
     "description": "$1 is the ticker symbol of a an asset the user is being prompted to purchase"
   },
   "buyNow": {
-    "message": "Buy now"
+    "message": "Buy Now"
   },
   "bytes": {
     "message": "Bytes"
@@ -1314,7 +1314,7 @@
     "message": "The majority of the token's supply is held by the top token holders, posing a risk of centralized price manipulation"
   },
   "concentratedSupplyDistributionTitle": {
-    "message": "Concentrated supply distribution"
+    "message": "Concentrated Supply Distribution"
   },
   "configureSnapPopupDescription": {
     "message": "You're now leaving MetaMask to configure this snap."
@@ -1435,7 +1435,7 @@
     "message": "Now"
   },
   "confirmInfoSwitchingTo": {
-    "message": "Switching to"
+    "message": "Switching To"
   },
   "confirmNestedTransactionTitle": {
     "message": "Transaction $1"
@@ -1998,7 +1998,7 @@
     "message": "Redirecting to MetaMask"
   },
   "deepLink_ThirdPartyDescription": {
-    "message": "You were sent here by a third-party, not MetaMask. $1",
+    "message": "You were sent here by a third party, not MetaMask. $1",
     "description": "$1 is the message 'deepLink_ContinueDescription'"
   },
   "deepLink_theBuyPage": {
@@ -2095,7 +2095,7 @@
     "message": "Got it"
   },
   "deprecatedNetworkDescription": {
-    "message": "The network you're trying to connect to is no longer supported by MetaMask. $1"
+    "message": "The network you're trying to connect to is no longer supported by Metamask. $1"
   },
   "description": {
     "message": "Description"
@@ -2127,7 +2127,7 @@
     "message": "Details"
   },
   "developerOptions": {
-    "message": "Developer options"
+    "message": "Developer Options"
   },
   "disabledGasOptionToolTipMessage": {
     "message": "“$1” is disabled because it does not meet the minimum of a 10% increase from the original gas fee.",
@@ -2230,7 +2230,7 @@
     "message": "Get our mobile app"
   },
   "downloadNow": {
-    "message": "Download now"
+    "message": "Download Now"
   },
   "downloadStateLogs": {
     "message": "Download state logs"
@@ -2500,7 +2500,7 @@
     "message": "Enter password to continue"
   },
   "enterYourPasswordSocialLoginFlow": {
-    "message": "Enter MetaMask Password"
+    "message": "Enter Metamask Password"
   },
   "errorCode": {
     "message": "Code: $1",
@@ -2634,7 +2634,7 @@
     "description": "Banner description displayed on Snaps list page in Settings when less than 6 Snaps is installed."
   },
   "externalAccount": {
-    "message": "External account"
+    "message": "External Account"
   },
   "externalExtension": {
     "message": "External extension"
@@ -2839,7 +2839,7 @@
     "description": "Label for a permission with no expiration"
   },
   "gatorPermissionTokenPeriodicFrequencyLabel": {
-    "message": "Transfer window",
+    "message": "Transfer Window",
     "description": "Label for the transfer window of a token periodic permission"
   },
   "gatorPermissionTokenStreamFrequencyLabel": {
@@ -3064,7 +3064,7 @@
     "message": "This token might pose a honeypot risk. It is advised to conduct due diligence before interacting to prevent any potential financial loss."
   },
   "honeypotTitle": {
-    "message": "Honey pot"
+    "message": "Honey Pot"
   },
   "hyperliquidReferralCheckboxLabel": {
     "message": "Allow MetaMask to add a referral code. This is permanent. The site offers discounts per their terms. MetaMask earns a fee.",
@@ -3228,7 +3228,7 @@
     "message": "The lack of adequately locked or burned liquidity leaves the token vulnerable to sudden liquidity withdrawals, potentially causing market instability."
   },
   "insufficientLockedLiquidityTitle": {
-    "message": "Insufficient locked liquidity"
+    "message": "Insufficient Locked Liquidity"
   },
   "insufficientTokens": {
     "message": "Insufficient tokens."
@@ -3334,7 +3334,7 @@
     "message": "Account name"
   },
   "keyringAccountPublicAddress": {
-    "message": "Public address"
+    "message": "Public Address"
   },
   "keyringSnapRemovalResult1": {
     "message": "$1 $2removed",
@@ -3398,7 +3398,7 @@
     "message": "Learn more about privacy best practices."
   },
   "learnMoreKeystone": {
-    "message": "Learn more"
+    "message": "Learn More"
   },
   "learnMoreUpperCase": {
     "message": "Learn more"
@@ -3556,13 +3556,13 @@
     "description": "$1 is the key 'loginErrorGenericSupport'"
   },
   "loginErrorGenericSupport": {
-    "message": "MetaMask Support"
+    "message": "Metamask Support"
   },
   "loginErrorGenericTitle": {
     "message": "Something went wrong"
   },
   "loginErrorResetWalletDescription": {
-    "message": "An issue occurred while unlocking. Re-login with $1 and your MetaMask password.",
+    "message": "An issue occurred while unlocking. Re-login with $1 and your Metamask password.",
     "description": "$1 is the social login method"
   },
   "loginErrorSessionExpiredButton": {
@@ -3611,7 +3611,7 @@
     "message": "Manage default settings"
   },
   "manageInstitutionalWallets": {
-    "message": "Manage institutional wallets"
+    "message": "Manage Institutional Wallets"
   },
   "manageInstitutionalWalletsDescription": {
     "message": "Turn this on to enable institutional wallets."
@@ -3709,7 +3709,7 @@
     "message": "The minimum you'll get if the price changes while your transaction processes, based on your slippage setting. The estimate comes from liquidity providers, so the final amount may differ."
   },
   "minimumReceivedExplanationTitle": {
-    "message": "Minimum amount received"
+    "message": "Minimum Amount Received"
   },
   "minimumReceivedLabel": {
     "message": "Minimum received"
@@ -3882,7 +3882,7 @@
     "description": "Title of the modal created by the name component when address is verified."
   },
   "nameModalTitleWarning": {
-    "message": "Address needs review",
+    "message": "Address Needs Review",
     "description": "Title of the modal created by the name component when address has warning trust signals."
   },
   "nameProviderProposedBy": {
@@ -3928,7 +3928,7 @@
     "description": "graceful fallback for when token symbol isn't found"
   },
   "nativeTokenScamWarningTitle": {
-    "message": "Unexpected native token symbol",
+    "message": "Unexpected Native Token Symbol",
     "description": "Title for nativeTokenScamWarningDescription"
   },
   "needHelp": {
@@ -3974,13 +3974,13 @@
     "message": "Network fees depend on how busy the network is and how complex your transaction is."
   },
   "networkFeeExplanationTitle": {
-    "message": "Network fee"
+    "message": "Network Fee"
   },
   "networkIsBusy": {
     "message": "Network is busy. Gas prices are high and estimates are less accurate."
   },
   "networkMenu": {
-    "message": "Network menu"
+    "message": "Network Menu"
   },
   "networkMenuHeading": {
     "message": "Select a network"
@@ -4194,7 +4194,7 @@
     "message": "NFTs"
   },
   "nftsPreviouslyOwned": {
-    "message": "Previously owned"
+    "message": "Previously Owned"
   },
   "nickname": {
     "message": "Nickname"
@@ -4296,7 +4296,7 @@
     "message": "Priority fee (GWEI)"
   },
   "notificationItemCheckBlockExplorer": {
-    "message": "Check on the block explorer"
+    "message": "Check on the Block Explorer"
   },
   "notificationItemCollection": {
     "message": "Collection"
@@ -4311,7 +4311,7 @@
     "message": "From"
   },
   "notificationItemLidoStakeReadyToBeWithdrawn": {
-    "message": "Withdrawal ready"
+    "message": "Withdrawal Ready"
   },
   "notificationItemLidoStakeReadyToBeWithdrawnMessage": {
     "message": "You can now withdraw your unstaked $1"
@@ -4350,7 +4350,7 @@
     "message": "Staked"
   },
   "notificationItemStakingProvider": {
-    "message": "Staking provider"
+    "message": "Staking Provider"
   },
   "notificationItemStatus": {
     "message": "Status"
@@ -4400,7 +4400,7 @@
     "message": "Notifications"
   },
   "notificationsFeatureToggle": {
-    "message": "Enable wallet notifications",
+    "message": "Enable Wallet Notifications",
     "description": "Experimental feature title"
   },
   "notificationsFeatureToggleDescription": {
@@ -4691,10 +4691,10 @@
     "message": "If I forget this password, I’ll lose access to my wallet permanently. MetaMask can’t reset it for me."
   },
   "passwordToggleHide": {
-    "message": "Hide password"
+    "message": "Hide Password"
   },
   "passwordToggleShow": {
-    "message": "Show password"
+    "message": "Show Password"
   },
   "passwordsDontMatch": {
     "message": "Passwords don't match"
@@ -5077,7 +5077,7 @@
     "message": "Priority fee"
   },
   "priorityFeeProperCase": {
-    "message": "Priority fee"
+    "message": "Priority Fee"
   },
   "privacy": {
     "message": "Privacy"
@@ -5598,7 +5598,7 @@
     "message": "An unknown error occurred while authenticating this account with the rewards program. Please try again later."
   },
   "rewardsAuthFailTitle": {
-    "message": "Unknown error."
+    "message": "Unknown Error."
   },
   "rewardsErrorMessagesAccountAlreadyRegistered": {
     "message": "This account is already registered with another Rewards profile. Please switch account to continue."
@@ -5685,7 +5685,7 @@
     "message": "By selecting 'Claim Points', you agree to the MetaMask Rewards "
   },
   "rewardsOnboardingStep4LegalDisclaimer2": {
-    "message": "Supplemental terms of use and privacy notice"
+    "message": "Supplemental Terms of Use and Privacy Notice"
   },
   "rewardsOnboardingStep4LegalDisclaimer3": {
     "message": ". We'll track onchain activity to reward you automatically –"
@@ -5736,7 +5736,7 @@
     "description": "Text shown when points balance couldn't be loaded"
   },
   "rewardsPointsIcon": {
-    "message": "Rewards points",
+    "message": "Rewards Points",
     "description": "Alt text for the rewards points icon"
   },
   "rewardsQRCodeDescription": {
@@ -6220,7 +6220,7 @@
     "message": "Confirm plan"
   },
   "shieldCoverageAlertCovered": {
-    "message": "You're protected up to $2 with MetaMask Transaction Shield. $1."
+    "message": "You're protected up to $2 with Metamask Transaction Shield. $1."
   },
   "shieldCoverageAlertHighRiskTransaction": {
     "message": "This is a high risk transaction, so it isn't protected by MetaMask Transaction Shield. $1."
@@ -6229,7 +6229,7 @@
     "message": "This chain is not supported, so it isn't protected by MetaMask Transaction Shield. $1"
   },
   "shieldCoverageAlertMessageLearnHowCoverageWorks": {
-    "message": "See what's covered"
+    "message": "See what's Covered"
   },
   "shieldCoverageAlertMessagePaused": {
     "message": "There was an issue with your MetaMask Transaction Shield plan payment. Please update your payment method to resume coverage."
@@ -6609,7 +6609,7 @@
     "message": "You're giving someone else permission to spend this amount from your account."
   },
   "simulationDetailsFiatNotAvailable": {
-    "message": "Not available"
+    "message": "Not Available"
   },
   "simulationDetailsIncomingHeading": {
     "message": "You receive"
@@ -6957,15 +6957,15 @@
     "message": "No insight to show"
   },
   "snapsPrivacyWarningFirstMessage": {
-    "message": "You acknowledge that any Snap that you install is a third-party service, unless otherwise identified, as defined in the Consensys $1. Your use of third-party services is governed by separate terms and conditions set forth by the third-party service provider. Consensys does not recommend the use of any Snap by any particular person for any particular reason. You access, rely upon or use the third-party service at your own risk. Consensys disclaims all responsibility and liability for any losses on account of your use of third-party services.",
+    "message": "You acknowledge that any Snap that you install is a Third Party Service, unless otherwise identified, as defined in the Consensys $1. Your use of Third Party Services is governed by separate terms and conditions set forth by the Third Party Service provider. Consensys does not recommend the use of any Snap by any particular person for any particular reason. You access, rely upon or use the Third Party Service at your own risk. Consensys disclaims all responsibility and liability for any losses on account of your use of Third Party Services.",
     "description": "First part of a message in popup modal displayed when installing a snap for the first time. $1 is terms of use link."
   },
   "snapsPrivacyWarningSecondMessage": {
-    "message": "Any information you share with third-party services will be collected directly by those third-party services in accordance with their privacy policies. please refer to their privacy policies for more information.",
+    "message": "Any information you share with Third Party Services will be collected directly by those Third Party Services in accordance with their privacy policies. Please refer to their privacy policies for more information.",
     "description": "Second part of a message in popup modal displayed when installing a snap for the first time."
   },
   "snapsPrivacyWarningThirdMessage": {
-    "message": "Consensys has no access to information you share with third-party services.",
+    "message": "Consensys has no access to information you share with Third Party Services.",
     "description": "Third part of a message in popup modal displayed when installing a snap for the first time."
   },
   "snapsSettings": {
@@ -7216,7 +7216,7 @@
     "message": "Staked"
   },
   "standardAccountLabel": {
-    "message": "Standard account"
+    "message": "Standard Account"
   },
   "stateCorruptionAreYouSure": {
     "message": "Are you sure you want to proceed?"
@@ -7236,7 +7236,7 @@
     "message": "Your vault can be recovered from an automated backup. Automatic recovery will delete your current settings and preferences, and restore only your vault."
   },
   "stateCorruptionMetamaskDatabaseCannotBeAccessed": {
-    "message": "Internal error: database cannot be accessed"
+    "message": "Internal Error: Database cannot be accessed"
   },
   "stateCorruptionResetMetaMaskState": {
     "message": "Reset MetaMask State"
@@ -7245,7 +7245,7 @@
     "message": "Resetting database…"
   },
   "stateCorruptionRestoreAccountsFromBackup": {
-    "message": "Restore accounts"
+    "message": "Restore Accounts"
   },
   "stateCorruptionRestoringDatabase": {
     "message": "Restoring database…"
@@ -7945,10 +7945,10 @@
     "message": "Token standard"
   },
   "tokenStream": {
-    "message": "Token stream"
+    "message": "Token Stream"
   },
   "tokenSubscription": {
-    "message": "Token subscription"
+    "message": "Token Subscription"
   },
   "tokenSymbol": {
     "message": "Token symbol"
@@ -8258,7 +8258,7 @@
     "message": "The price of this token in USD is highly volatile, indicating a high risk of losing significant value by interacting with it."
   },
   "unstableTokenPriceTitle": {
-    "message": "Unstable token price"
+    "message": "Unstable Token Price"
   },
   "upArrow": {
     "message": "up arrow"
@@ -8333,7 +8333,7 @@
   },
   "useSafeChainsListValidationWebsite": {
     "message": "chainid.network",
-    "description": "useSafeChainsListValidationWebsite is separated from the rest of the text so that we can bold the third-party service name in the middle of them"
+    "description": "useSafeChainsListValidationWebsite is separated from the rest of the text so that we can bold the third party service name in the middle of them"
   },
   "useSmartAccountDescription": {
     "message": "Keep this on to automatically switch accounts created within MetaMask to smart accounts whenever relevant features are available, such as faster transactions, lower network fees and payment flexibility on payment for those."
@@ -8342,7 +8342,7 @@
     "message": "Use smart account"
   },
   "useTokenDetectionPrivacyDesc": {
-    "message": "Automatically displaying tokens sent to your account involves communication with third-party servers to fetch token’s images. Those serves will have access to your IP address."
+    "message": "Automatically displaying tokens sent to your account involves communication with third party servers to fetch token’s images. Those serves will have access to your IP address."
   },
   "usedByClients": {
     "message": "Used by a variety of different clients"
