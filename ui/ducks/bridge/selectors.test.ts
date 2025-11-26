@@ -1,5 +1,6 @@
 import { zeroAddress } from 'ethereumjs-util';
 import {
+  ALLOWED_BRIDGE_CHAIN_IDS,
   ChainId,
   type QuoteMetadata,
   type QuoteResponse,
@@ -182,7 +183,9 @@ describe('Bridge selectors', () => {
       ).toStrictEqual(
         expect.objectContaining({ chainId: FEATURED_RPCS[1].chainId }),
       );
-      FEATURED_RPCS.forEach((rpcDefinition) => {
+      FEATURED_RPCS.filter(({ chainId }) =>
+        (ALLOWED_BRIDGE_CHAIN_IDS as readonly string[]).includes(chainId),
+      ).forEach((rpcDefinition) => {
         expect(
           result[formatChainIdToCaip(rpcDefinition.chainId)],
         ).toStrictEqual(

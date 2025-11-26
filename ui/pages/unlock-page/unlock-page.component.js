@@ -2,7 +2,6 @@ import { EventEmitter } from 'events';
 import React, { Component, lazy, Suspense } from 'react';
 import PropTypes from 'prop-types';
 import { SeedlessOnboardingControllerErrorMessage } from '@metamask/seedless-onboarding-controller';
-import log from 'loglevel';
 import {
   Text,
   FormTextField,
@@ -44,11 +43,11 @@ import { FirstTimeFlowType } from '../../../shared/constants/onboarding';
 import { withMetaMetrics } from '../../contexts/metametrics';
 import LoginErrorModal from '../onboarding-flow/welcome/login-error-modal';
 import { LOGIN_ERROR } from '../onboarding-flow/welcome/types';
-import MetaFoxHorizontalLogo from '../../components/ui/metafox-logo/horizontal-logo';
 import ConnectionsRemovedModal from '../../components/app/connections-removed-modal';
 import { getCaretCoordinates } from './unlock-page.util';
 import ResetPasswordModal from './reset-password-modal';
 import FormattedCounter from './formatted-counter';
+import { MetamaskWordmarkLogo } from './metamask-wordmark-logo';
 
 const FoxAppearAnimation = lazy(
   () => import('../onboarding-flow/welcome/fox-appear-animation'),
@@ -97,6 +96,10 @@ class UnlockPage extends Component {
      */
     checkIsSeedlessPasswordOutdated: PropTypes.func,
     /**
+     * check if the seedless onboarding user is authenticated for social login flow to do the rehydration
+     */
+    getIsSeedlessOnboardingUserAuthenticated: PropTypes.func,
+    /**
      * Force update metamask data state
      */
     forceUpdateMetamaskState: PropTypes.func,
@@ -120,6 +123,10 @@ class UnlockPage extends Component {
      * Reset Wallet
      */
     resetWallet: PropTypes.func,
+    /**
+     * Indicates if the environment is a popup
+     */
+    isPopup: PropTypes.bool,
   };
 
   state = {
@@ -166,12 +173,17 @@ class UnlockPage extends Component {
   }
 
   async componentDidMount() {
-    const { isOnboardingCompleted } = this.props;
+    const { isOnboardingCompleted, isSocialLoginFlow } = this.props;
     if (isOnboardingCompleted) {
-      try {
-        await this.props.checkIsSeedlessPasswordOutdated();
-      } catch (error) {
-        log.error('unlock page - checkIsSeedlessPasswordOutdated error', error);
+      await this.props.checkIsSeedlessPasswordOutdated();
+    } else if (isSocialLoginFlow) {
+      // if the onboarding is not completed, check if the seedless onboarding user is authenticated to do the rehydration
+      // we have to consider the case where required tokens for rehydration are removed when user closed the browser app after social login is completed.
+      const isAuthenticated =
+        await this.props.getIsSeedlessOnboardingUserAuthenticated();
+      if (!isAuthenticated) {
+        // if the seedless onboarding user is not authenticated, redirect to the onboarding welcome page
+        this.props.navigate(ONBOARDING_WELCOME_ROUTE, { replace: true });
       }
     }
   }
@@ -493,7 +505,6 @@ class UnlockPage extends Component {
 
     const needHelpText = t('needHelpLinkText');
     const isRehydrationFlow = isSocialLoginFlow && !isOnboardingCompleted;
-    const isTestEnvironment = Boolean(process.env.IN_TEST);
 
     return (
       <Box
@@ -545,7 +556,7 @@ class UnlockPage extends Component {
               {isRehydrationFlow ? (
                 this.renderMascot()
               ) : (
-                <MetaFoxHorizontalLogo className="unlock-page__mascot-container__horizontal-logo" />
+                <MetamaskWordmarkLogo isPopup={this.props.isPopup} />
               )}
               {isBeta() ? (
                 <Text
@@ -618,7 +629,7 @@ class UnlockPage extends Component {
               key="import-account"
               type="button"
               onClick={this.onForgotPasswordOrLoginWithDiffMethods}
-              marginBottom={6}
+              marginBottom={4}
               color={
                 isRehydrationFlow
                   ? TextColor.textDefault
@@ -630,41 +641,40 @@ class UnlockPage extends Component {
                 : t('forgotPassword')}
             </Button>
 
-            {isRehydrationFlow && (
-              <Text>
-                {t('needHelp', [
-                  <Button
-                    variant={ButtonVariant.Link}
-                    href={SUPPORT_LINK}
-                    type="button"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    key="need-help-link"
-                    onClick={() => {
-                      this.context.trackEvent(
-                        {
-                          category: MetaMetricsEventCategory.Navigation,
-                          event: MetaMetricsEventName.SupportLinkClicked,
-                          properties: {
-                            url: SUPPORT_LINK,
-                          },
+            <Text variant={TextVariant.bodyMd} color={TextColor.textDefault}>
+              {t('needHelp', [
+                <Button
+                  variant={ButtonVariant.Link}
+                  color={TextColor.primaryDefault}
+                  href={SUPPORT_LINK}
+                  type="button"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  key="need-help-link"
+                  onClick={() => {
+                    this.context.trackEvent(
+                      {
+                        category: MetaMetricsEventCategory.Navigation,
+                        event: MetaMetricsEventName.SupportLinkClicked,
+                        properties: {
+                          url: SUPPORT_LINK,
                         },
-                        {
-                          contextPropsIntoEventProperties: [
-                            MetaMetricsContextProp.PageTitle,
-                          ],
-                        },
-                      );
-                    }}
-                  >
-                    {needHelpText}
-                  </Button>,
-                ])}
-              </Text>
-            )}
+                      },
+                      {
+                        contextPropsIntoEventProperties: [
+                          MetaMetricsContextProp.PageTitle,
+                        ],
+                      },
+                    );
+                  }}
+                >
+                  {needHelpText}
+                </Button>,
+              ])}
+            </Text>
           </Box>
         </Box>
-        {!isTestEnvironment && !isRehydrationFlow && (
+        {!isRehydrationFlow && (
           <Suspense fallback={<Box />}>
             <FoxAppearAnimation />
           </Suspense>

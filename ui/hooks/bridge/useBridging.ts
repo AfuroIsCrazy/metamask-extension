@@ -35,7 +35,7 @@ import { ALL_ALLOWED_BRIDGE_CHAIN_IDS } from '../../../shared/constants/bridge';
 import {
   getFromChain,
   getFromChains,
-  getLastSelectedChain,
+  getLastSelectedChainId,
 } from '../../ducks/bridge/selectors';
 import { CHAIN_IDS } from '../../../shared/constants/network';
 
@@ -48,7 +48,7 @@ const useBridging = () => {
   const isMetaMetricsEnabled = useSelector(getParticipateInMetaMetrics);
   const isMarketingEnabled = useSelector(getDataCollectionForMarketing);
 
-  const lastSelectedChain = useSelector(getLastSelectedChain);
+  const lastSelectedChainId = useSelector(getLastSelectedChainId);
   const fromChain = useSelector(getFromChain);
   const fromChains = useSelector(getFromChains);
 
@@ -84,9 +84,8 @@ const useBridging = () => {
        * default fromChain: srctoken.chainId > lastSelectedId > MAINNET
        */
       const targetChainId =
-        lastSelectedChain?.chainId &&
-        isChainIdEnabledForBridging(lastSelectedChain.chainId)
-          ? lastSelectedChain.chainId
+        lastSelectedChainId && isChainIdEnabledForBridging(lastSelectedChainId)
+          ? lastSelectedChainId
           : CHAIN_IDS.MAINNET;
       if (!srcAssetIdToUse && targetChainId !== fromChain?.chainId) {
         srcAssetIdToUse = getNativeAssetForChainId(targetChainId)?.assetId;
@@ -144,8 +143,8 @@ const useBridging = () => {
       trackEvent,
       isMetaMetricsEnabled,
       isMarketingEnabled,
+      lastSelectedChainId,
       fromChain?.chainId,
-      lastSelectedChain?.chainId,
       isChainIdEnabledForBridging,
     ],
   );
