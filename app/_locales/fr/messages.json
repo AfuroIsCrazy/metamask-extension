@@ -7414,7 +7414,7 @@
   },
   "useSafeChainsListValidationWebsite": {
     "message": "chainid.network",
-    "description": "useSafeChainsListValidationWebsite is separated from the rest of the text so that we can bold the third-party service name in the middle of them"
+    "description": "useSafeChainsListValidationWebsite is separated from the rest of the text so that we can bold the third party service name in the middle of them"
   },
   "useSmartAccountDescription": {
     "message": "Gardez cette option activée pour basculer automatiquement les comptes créés dans MetaMask vers des comptes intelligents dès que des fonctionnalités pertinentes sont disponibles, telles que des transactions plus rapides, des frais de réseau réduits et une plus grande flexibilité de paiement."

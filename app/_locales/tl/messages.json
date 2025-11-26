@@ -7414,7 +7414,7 @@
   },
   "useSafeChainsListValidationWebsite": {
     "message": "chainid.network",
-    "description": "useSafeChainsListValidationWebsite is separated from the rest of the text so that we can bold the third-party service name in the middle of them"
+    "description": "useSafeChainsListValidationWebsite is separated from the rest of the text so that we can bold the third party service name in the middle of them"
   },
   "useSmartAccountDescription": {
     "message": "Panatilihin itong naka-on para awtomatikong gawing mga smart account ang mga account na ginawa sa loob ng MetaMask sa tuwing available ang mga naaangkop na feature, gaya ng mas mabibilis na transaksyon, mas mabababang bayad sa network at flexible na bayad para sa pagbabayad sa mga ito."

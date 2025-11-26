@@ -7411,7 +7411,7 @@
   },
   "useSafeChainsListValidationWebsite": {
     "message": "chainid.network",
-    "description": "useSafeChainsListValidationWebsite is separated from the rest of the text so that we can bold the third-party service name in the middle of them"
+    "description": "useSafeChainsListValidationWebsite is separated from the rest of the text so that we can bold the third party service name in the middle of them"
   },
   "useSmartAccountDescription": {
     "message": "जब भी प्रासंगिक सुविधाएं उपलब्ध हों, जैसे कि तेज ट्रांसेक्शन, कम नेटवर्क शुल्क और उनके लिए भुगतान पर लचीलापन, तो MetaMask के भीतर बनाए गए एकाउंट्स को स्वचालित रूप से स्मार्ट एकाउंट्स में बदलने के लिए इसे चालू रखें।"
