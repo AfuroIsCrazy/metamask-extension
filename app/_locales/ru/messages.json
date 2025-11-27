@@ -6671,19 +6671,19 @@
   },
   "swapIncludesGasAndMetaMaskFee": {
     "message": "Включает плату за газ и комиссию MetaMask в размере $1%",
-    "description": "Provides information about the fee that metamask takes for swaps. $1 is a decimal number."
+    "description": "Provides information about the fee that MetaMask takes for swaps. $1 is a decimal number."
   },
   "swapIncludesMMFee": {
     "message": "Включает комиссию MetaMask в размере $1%.",
-    "description": "Provides information about the fee that metamask takes for swaps. $1 is a decimal number."
+    "description": "Provides information about the fee that MetaMask takes for swaps. $1 is a decimal number."
   },
   "swapIncludesMMFeeAlt": {
     "message": "Котировка с учетом комиссии MetaMask в размере $1 %",
-    "description": "Provides information about the fee that metamask takes for swaps using the latest copy. $1 is a decimal number."
+    "description": "Provides information about the fee that MetaMask takes for swaps using the latest copy. $1 is a decimal number."
   },
   "swapIncludesMetaMaskFeeViewAllQuotes": {
     "message": "Включает комиссию MetaMask в размере $1% — $2.",
-    "description": "Provides information about the fee that metamask takes for swaps. $1 is a decimal number and $2 is a link to view all quotes."
+    "description": "Provides information about the fee that MetaMask takes for swaps. $1 is a decimal number and $2 is a link to view all quotes."
   },
   "swapLearnMore": {
     "message": "Узнайте больше о свопах"
@@ -6702,7 +6702,7 @@
   },
   "swapMetaMaskFeeDescription": {
     "message": "В этой котировке автоматически учитывается комиссия в размере $1%. Вы платите ее в обмен на лицензию на использование программного обеспечения MetaMask для сбора информации о поставщиках ликвидности.",
-    "description": "Provides information about the fee that metamask takes for swaps. $1 is a decimal number."
+    "description": "Provides information about the fee that MetaMask takes for swaps. $1 is a decimal number."
   },
   "swapNQuotesWithDot": {
     "message": "Котировок: $1.",
