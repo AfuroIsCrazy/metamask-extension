@@ -4,17 +4,13 @@ import {
   BridgeUserAction,
   formatChainIdToCaip,
   isNativeAddress,
-  getNativeAssetForChainId,
   type RequiredEventContextFromClient,
   UnifiedSwapBridgeEventName,
+  formatChainIdToHex,
+  isCrossChain,
 } from '@metamask/bridge-controller';
-import { type InternalAccount } from '@metamask/keyring-internal-api';
-import { type CaipChainId } from '@metamask/utils';
-import type {
-  AddNetworkFields,
-  NetworkConfiguration,
-} from '@metamask/network-controller';
 import { trace, TraceName } from '../../../shared/lib/trace';
+import { selectDefaultNetworkClientIdsByChainId } from '../../../shared/modules/selectors/networks';
 import {
   forceUpdateMetamaskState,
   setActiveNetworkWithError,
@@ -31,11 +27,12 @@ import {
   setEVMSrcNativeBalance,
 } from './bridge';
 import type { TokenPayload } from './types';
-import { isNetworkAdded, isNonEvmChain } from './utils';
+import { isNonEvmChain } from './utils';
+import { type BridgeAppState, getFromChain } from './selectors';
 
 const {
   setToChainId,
-  setFromToken,
+  setFromToken: setFromTokenAction,
   setToToken,
   setFromTokenInputValue,
   resetInputFields,
@@ -50,7 +47,6 @@ export {
   setToChainId,
   resetInputFields,
   setToToken,
-  setFromToken,
   setFromTokenInputValue,
   setDestTokenExchangeRates,
   setDestTokenUsdExchangeRates,
@@ -144,71 +140,33 @@ export const setEVMSrcTokenBalance = (
   };
 };
 
-export const setFromChain = ({
-  networkConfig,
-  selectedAccount,
-  token = null,
-}: {
-  networkConfig?:
-    | NetworkConfiguration
-    | AddNetworkFields
-    | (Omit<NetworkConfiguration, 'chainId'> & { chainId: CaipChainId });
-  selectedAccount: InternalAccount | null;
-  token?: TokenPayload['payload'];
-}) => {
-  return async (dispatch: MetaMaskReduxDispatch) => {
-    if (!networkConfig) {
-      return;
-    }
+export const setFromToken = (token: NonNullable<TokenPayload['payload']>) => {
+  return async (
+    dispatch: MetaMaskReduxDispatch,
+    getState: () => BridgeAppState,
+  ) => {
+    const { chainId } = token;
+    const isNonEvm = isNonEvmChain(chainId);
 
-    // Check for ALL non-EVM chains
-    const isNonEvm = isNonEvmChain(networkConfig.chainId);
-
+    const currentChainId = getFromChain(getState())?.chainId;
+    const shouldSetNetwork = currentChainId
+      ? isCrossChain(currentChainId, chainId)
+      : true;
     // Set the src network
-    if (isNonEvm) {
-      dispatch(setActiveNetworkWithError(networkConfig.chainId));
-    } else {
-      const networkId = isNetworkAdded(networkConfig)
-        ? networkConfig.rpcEndpoints?.[networkConfig.defaultRpcEndpointIndex]
-            ?.networkClientId
-        : null;
-      if (networkId) {
-        dispatch(setActiveNetworkWithError(networkId));
+    if (shouldSetNetwork) {
+      if (isNonEvm) {
+        const caipChainId = formatChainIdToCaip(chainId);
+        dispatch(setActiveNetworkWithError(caipChainId));
+      } else {
+        const hexChainId = formatChainIdToHex(chainId);
+        const networkId =
+          selectDefaultNetworkClientIdsByChainId(getState())[hexChainId];
+        if (networkId && shouldSetNetwork) {
+          dispatch(setActiveNetworkWithError(networkId));
+        }
       }
     }
-
-    // Set the src token - if no token provided, set native token for non-EVM chains
-    if (token) {
-      dispatch(setFromToken(token));
-    } else if (isNonEvm) {
-      // Auto-select native token for non-EVM chains when switching
-      const nativeAsset = getNativeAssetForChainId(networkConfig.chainId);
-      if (nativeAsset) {
-        dispatch(
-          setFromToken({
-            ...nativeAsset,
-            chainId: networkConfig.chainId,
-          }),
-        );
-      }
-    }
-
-    // Fetch the native balance (EVM only)
-    if (selectedAccount && !isNonEvm) {
-      trace({
-        name: TraceName.BridgeBalancesUpdated,
-        data: {
-          srcChainId: formatChainIdToCaip(networkConfig.chainId),
-          isNative: true,
-        },
-        startTime: Date.now(),
-      });
-      await dispatch(
-        setEVMSrcNativeBalance({
-          selectedAddress: selectedAccount.address,
-          chainId: networkConfig.chainId,
-        }),
-      );
-    }
+    // Set the fromToken
+    dispatch(setFromTokenAction(token));
   };
 };

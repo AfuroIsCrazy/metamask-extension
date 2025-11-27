@@ -7,23 +7,20 @@ import {
   parseCaipAssetType,
 } from '@metamask/utils';
 import {
-  formatChainIdToCaip,
   getNativeAssetForChainId,
   isCrossChain,
   isNativeAddress,
 } from '@metamask/bridge-controller';
-import { type InternalAccount } from '@metamask/keyring-internal-api';
-import { type NetworkConfiguration } from '@metamask/network-controller';
 import {
   type AssetMetadata,
   fetchAssetMetadataForAssetIds,
 } from '../../../shared/lib/asset-utils';
 import { BridgeQueryParams } from '../../../shared/lib/deep-links/routes/swap';
 import { calcTokenAmount } from '../../../shared/lib/transactions-controller-utils';
+import { trace, TraceName } from '../../../shared/lib/trace';
 import {
   setEVMSrcTokenBalance,
   setEVMSrcNativeBalance,
-  setFromChain,
   setFromToken,
   setFromTokenInputValue,
   setToToken,
@@ -169,15 +166,7 @@ export const useBridgeQueryParams = () => {
 
   // Set fromChain and fromToken
   const setFromChainAndToken = useCallback(
-    (
-      fromTokenMetadata,
-      fromAsset,
-      networks: NetworkConfiguration[],
-      account: InternalAccount | null,
-      network?: NetworkConfiguration,
-    ) => {
-      const { chainId: assetChainId } = fromAsset;
-
+    (fromTokenMetadata: AssetMetadata) => {
       if (fromTokenMetadata) {
         const { chainId, assetReference } = parseCaipAssetType(
           fromTokenMetadata.assetId,
@@ -193,24 +182,7 @@ export const useBridgeQueryParams = () => {
               ? (nativeAsset?.address ?? '')
               : assetReference,
         };
-        // If asset's chain is the same as fromChain, only set the fromToken
-        if (network && assetChainId === formatChainIdToCaip(network.chainId)) {
-          dispatch(setFromToken(token));
-        } else {
-          // Find the chain matching the srcAsset's chainId
-          const targetChain = networks.find(
-            (chain) => formatChainIdToCaip(chain.chainId) === assetChainId,
-          );
-          if (targetChain) {
-            dispatch(
-              setFromChain({
-                networkConfig: targetChain,
-                selectedAccount: account,
-                token,
-              }),
-            );
-          }
-        }
+        dispatch(setFromToken(token));
       }
     },
     [],
@@ -247,20 +219,8 @@ export const useBridgeQueryParams = () => {
       ];
 
     // Process from chain/token first
-    setFromChainAndToken(
-      fromTokenMetadata,
-      parsedFromAssetId,
-      fromChains,
-      selectedAccount,
-      fromChain,
-    );
-  }, [
-    assetMetadataByAssetId,
-    parsedFromAssetId,
-    fromChains,
-    fromChain,
-    selectedAccount,
-  ]);
+    setFromChainAndToken(fromTokenMetadata);
+  }, [assetMetadataByAssetId, parsedFromAssetId, fromChains]);
 
   // Set toChainId and toToken
   useEffect(() => {
@@ -312,7 +272,23 @@ export const useBridgeQueryParams = () => {
       !isCrossChain(fromToken.chainId, fromChain?.chainId) &&
       selectedAccount
     ) {
+      trace({
+        name: TraceName.BridgeBalancesUpdated,
+        data: {
+          srcChainId: formatChainIdToCaip(fromToken.chainId),
+          isNative: isNativeAddress(fromToken.address),
+        },
+        startTime: Date.now(),
+      });
       dispatch(setEVMSrcTokenBalance(fromToken, selectedAccount.address));
+      trace({
+        name: TraceName.BridgeBalancesUpdated,
+        data: {
+          srcChainId: formatChainIdToCaip(fromToken.chainId),
+          isNative: true,
+        },
+        startTime: Date.now(),
+      });
       dispatch(
         setEVMSrcNativeBalance({
           selectedAddress: selectedAccount.address,

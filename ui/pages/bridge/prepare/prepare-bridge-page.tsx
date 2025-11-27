@@ -33,7 +33,6 @@ import {
   updateQuoteRequestParams,
   resetBridgeState,
   trackUnifiedSwapBridgeEvent,
-  setFromChain,
 } from '../../../ducks/bridge/actions';
 import {
   getBridgeQuotes,
@@ -548,9 +547,6 @@ const PrepareBridgePage = ({
             };
             dispatch(setFromToken(bridgeToken));
             dispatch(setFromTokenInputValue(null));
-            if (token.address === toToken?.address) {
-              dispatch(setToToken(null));
-            }
           }}
           networkProps={{
             network: fromChain,
@@ -560,10 +556,7 @@ const PrepareBridgePage = ({
                 enableMissingNetwork(networkConfig.chainId);
               }
               dispatch(
-                setFromChain({
-                  networkConfig,
-                  selectedAccount,
-                }),
+                setFromToken(getNativeAssetForChainId(networkConfig.chainId)),
               );
             },
             header: t('yourNetworks'),
@@ -686,18 +679,7 @@ const PrepareBridgePage = ({
 
                 setRotateSwitchTokens(!rotateSwitchTokens);
 
-                if (isSwap) {
-                  dispatch(setFromToken(toToken));
-                } else {
-                  // Handle account switching for Solana
-                  dispatch(
-                    setFromChain({
-                      networkConfig: toChain,
-                      token: toToken,
-                      selectedAccount,
-                    }),
-                  );
-                }
+                toToken && dispatch(setFromToken(toToken));
                 dispatch(setToToken(fromToken));
               }}
             />
