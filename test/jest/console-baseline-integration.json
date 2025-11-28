@@ -1,0 +1,16 @@
+{
+  "generated": "2025-11-28T15:12:55.145Z",
+  "nodeVersion": "v22.15.1",
+  "warnings": {
+    "React: Act warnings": {
+      "count": 45,
+      "type": "error",
+      "sample": "Warning: An update to Component inside a test was not wrapped in act(...)"
+    },
+    "MetaMask: Background connection not initialized": {
+      "count": 32,
+      "type": "warn",
+      "sample": "Warning: Background connection is not set..."
+    }
+  }
+}

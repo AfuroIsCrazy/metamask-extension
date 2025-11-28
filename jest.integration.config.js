@@ -26,6 +26,15 @@ module.exports = {
         rules: consoleReporterRules,
       },
     ],
+    [
+      '<rootDir>/test/jest/baseline-enforcer-reporter.js',
+      {
+        baselinePath: '<rootDir>/test/jest/console-baseline-integration.json',
+        enabled: process.env.ENFORCE_CONSOLE_BASELINE !== 'false',
+        failOnViolation: true,
+        showImprovements: true,
+      },
+    ],
     '<rootDir>/test/jest/summary-reporter.js',
     [
       'jest-junit',

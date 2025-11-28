@@ -1,0 +1,31 @@
+{
+  "generated": "2025-11-28T15:12:55.144Z",
+  "nodeVersion": "v22.15.1",
+  "warnings": {
+    "React: Act warnings": {
+      "count": 126,
+      "type": "error",
+      "sample": "Warning: An update to Component inside a test was not wrapped in act(...)"
+    },
+    "MetaMask: Background connection not initialized": {
+      "count": 170,
+      "type": "warn",
+      "sample": "Warning: Background connection is not set..."
+    },
+    "Reselect: Identity function warnings": {
+      "count": 85,
+      "type": "warn",
+      "sample": "Warning: reselect: identity function as input selector..."
+    },
+    "Reselect: Input stability warnings": {
+      "count": 66,
+      "type": "warn",
+      "sample": "Warning: reselect: input selector returned different result..."
+    },
+    "MetaMask: Invalid theme warnings": {
+      "count": 56,
+      "type": "warn",
+      "sample": "Warning: Invalid theme..."
+    }
+  }
+}
