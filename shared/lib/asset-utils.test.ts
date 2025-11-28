@@ -70,7 +70,7 @@ describe('asset-utils', () => {
       ]);
     });
 
-    it('should throw an error if getNativeAssetForChainId throws an error', () => {
+    it('should return undefined if getNativeAssetForChainId throws an error', () => {
       const nativeAddress = '0x0000000000000000000000000000000000000000';
       const chainId = 'eip155:1231' as CaipChainId;
 
@@ -103,13 +103,12 @@ describe('asset-utils', () => {
       ]);
     });
 
-    it('should throw an error for non-hex address on EVM chains', () => {
+    it('should return undefined for non-hex address on EVM chains', () => {
       const address = 'not-a-hex-address';
       const chainId = 'eip155:1' as CaipChainId;
 
-      expect(() => toAssetId(address, chainId)).toThrow(
-        'Invalid address or chainId: not-a-hex-address eip155:1',
-      );
+      const result = toAssetId(address, chainId);
+      expect(result).toBeUndefined();
     });
 
     it('should handle different EVM chain IDs', () => {
@@ -153,12 +152,10 @@ describe('asset-utils', () => {
       expect(getAssetImageUrl(assetId, 'eip155:1')).toBe(expectedUrl);
     });
 
-    it('should throw error for asset IDs with multiple colons', () => {
+    it('should handle asset IDs with multiple colons', () => {
       const assetId = 'test:chain:1/token:0x123' as CaipAssetType;
 
-      expect(() => getAssetImageUrl(assetId, 'eip155:1')).toThrow(
-        'Invalid address or chainId: test:chain:1/token:0x123 eip155:1',
-      );
+      expect(getAssetImageUrl(assetId, 'eip155:1')).toBe(undefined);
     });
   });
 

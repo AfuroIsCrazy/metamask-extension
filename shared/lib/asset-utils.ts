@@ -29,18 +29,10 @@ import { TEN_SECONDS_IN_MILLISECONDS } from './transactions-controller-utils';
 const TOKEN_API_V3_BASE_URL = 'https://tokens.api.cx.metamask.io/v3';
 const STATIC_METAMASK_BASE_URL = 'https://static.cx.metamask.io';
 
-/**
- * Converts an address and chainId to a CAIP asset type
- *
- * @param address - The address of the asset
- * @param chainId - The chainId of the asset
- * @returns The CAIP asset type
- * @throws An error if the chainId is not supported by the Swap and Bridge APIs
- */
 export const toAssetId = (
   address: Hex | CaipAssetType | string,
   chainId: CaipChainId,
-): CaipAssetType => {
+): CaipAssetType | undefined => {
   if (isCaipAssetType(address)) {
     return address;
   }
@@ -56,7 +48,7 @@ export const toAssetId = (
       `${chainId}/erc20:${address.toLowerCase()}`,
     );
   }
-  throw new Error(`Invalid address or chainId: ${address} ${chainId}`);
+  return undefined;
 };
 
 /**
