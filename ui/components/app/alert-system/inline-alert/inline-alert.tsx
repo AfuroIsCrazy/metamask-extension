@@ -10,7 +10,6 @@ import {
   TextVariant,
   BackgroundColor,
 } from '../../../../helpers/constants/design-system';
-import { useI18nContext } from '../../../../hooks/useI18nContext';
 import {
   Box,
   Icon,
@@ -59,8 +58,6 @@ export default function InlineAlert({
   iconRight,
   backgroundColor,
 }: InlineAlertProps) {
-  const t = useI18nContext();
-
   const renderIcon = () => (
     <Icon
       name={
@@ -93,14 +90,17 @@ export default function InlineAlert({
         backgroundColor={backgroundColor}
         style={{
           cursor: onClick ? 'pointer' : 'default',
+          ...(!textOverride && { backgroundColor: 'transparent' }),
           ...style,
         }}
         onClick={onClick}
       >
         {!iconRight && renderIcon()}
-        <Text variant={TextVariant.bodySm} color={TextColor.inherit}>
-          {textOverride ?? t('alert')}
-        </Text>
+        {textOverride && (
+          <Text variant={TextVariant.bodySm} color={TextColor.inherit}>
+            {textOverride}
+          </Text>
+        )}
         {iconRight && renderIcon()}
         {showArrow && <Icon name={IconName.ArrowRight} size={IconSize.Xs} />}
       </Box>
