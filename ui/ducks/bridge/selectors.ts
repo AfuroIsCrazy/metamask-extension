@@ -315,15 +315,52 @@ export const getLastSelectedChainId = createSelector(
 );
 
 // This returns undefined if the selected chain is not supported by swap/bridge (i.e, testnets)
-export const getFromChain = createDeepEqualSelector(
-  [getFromChains, getMultichainProviderConfig],
-  (fromChains, providerConfig) => {
+export const getFromToken = createSelector(
+  [
+    (state: BridgeAppState) => state.bridge.fromToken,
+    getFromChains,
+    getMultichainProviderConfig,
+  ],
+  (fromToken, fromChains, providerConfig) => {
     // When the page loads the global network always matches the network filter
     // Because useBridging checks whether the lastSelectedNetwork matches the provider config
     // Then useBridgeQueryParams sets the global network to lastSelectedNetwork as needed
     // TODO remove providerConfig references and just use getLastSelectedChainId
-    return fromChains.find(
+    const fromChain = fromChains.find(
       ({ chainId }) => chainId === providerConfig?.chainId,
+    );
+    if (!fromChain) {
+      return null;
+    }
+    const fromChainId = fromChain.chainId;
+    if (
+      fromToken &&
+      fromToken.address &&
+      !isCrossChain(fromToken.chainId, fromChainId)
+    ) {
+      return fromToken;
+    }
+    const { iconUrl, ...nativeAsset } = getNativeAssetForChainId(fromChainId);
+    const newToToken = toBridgeToken(nativeAsset);
+    return newToToken
+      ? {
+          ...newToToken,
+          chainId: formatChainIdToCaip(fromChainId),
+        }
+      : newToToken;
+  },
+);
+
+// Return's the chain matching the fromToken's chainId
+export const getFromChain = createSelector(
+  [getFromToken, getFromChains],
+  (fromToken, fromChains) => {
+    if (!fromToken) {
+      return undefined;
+    }
+    return fromChains.find(
+      ({ chainId }) =>
+        formatChainIdToCaip(chainId) === formatChainIdToCaip(fromToken.chainId),
     );
   },
 );
@@ -415,29 +452,6 @@ export const getToChain = createSelector(
 
     // For all other chains, default to same chain (swap mode)
     return fromChain;
-  },
-);
-
-export const getFromToken = createSelector(
-  [
-    (state: BridgeAppState) => state.bridge.fromToken,
-    (state) => getFromChain(state)?.chainId,
-  ],
-  (fromToken, fromChainId) => {
-    if (!fromChainId) {
-      return null;
-    }
-    if (fromToken?.address) {
-      return fromToken;
-    }
-    const { iconUrl, ...nativeAsset } = getNativeAssetForChainId(fromChainId);
-    const newToToken = toBridgeToken(nativeAsset);
-    return newToToken
-      ? {
-          ...newToToken,
-          chainId: formatChainIdToCaip(fromChainId),
-        }
-      : newToToken;
   },
 );
 
@@ -727,10 +741,7 @@ export const getToTokenConversionRate = createDeepEqualSelector(
     }
     if (toChain?.chainId && toToken) {
       const nativeAssetId = getNativeAssetForChainId(toChain.chainId)?.assetId;
-      const tokenAssetId = toAssetId(
-        toToken.address,
-        formatChainIdToCaip(toChain.chainId),
-      );
+      const tokenAssetId = toToken.assetId;
 
       // For non-EVM tokens (Solana, Bitcoin, Tron), we use the conversion rates provided by the multichain rates controller
       if (isNonEvmChain(toChain.chainId) && nativeAssetId && tokenAssetId) {
