@@ -163,7 +163,7 @@ export const ConfirmInfoRow: React.FC<ConfirmInfoRowProps> = ({
             alignItems={AlignItems.center}
             style={labelChildrenStyleOverride}
           >
-            <Text variant={TextVariant.bodyMdMedium} color={TextColor.inherit}>
+            <Text variant={TextVariant.bodyMdMedium} color={TextColor.textAlternative}>
               {label}
             </Text>
             {labelChildren}
