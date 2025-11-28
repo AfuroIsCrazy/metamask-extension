@@ -86,11 +86,11 @@ export default function InlineAlert({
           'inline-alert__success': severity === Severity.Success,
           'inline-alert__disabled': severity === Severity.Disabled,
           'inline-alert__pill': pill,
+          'inline-alert__transparent-background': !textOverride,
         })}
         backgroundColor={backgroundColor}
         style={{
           cursor: onClick ? 'pointer' : 'default',
-          ...(!textOverride && { backgroundColor: 'transparent' }),
           ...style,
         }}
         onClick={onClick}
